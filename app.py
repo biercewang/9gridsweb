@@ -30,6 +30,9 @@ def add_preset_data():
             print("Error adding preset data:", e)
             db.session.rollback()
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.before_request
 def before_request():
@@ -42,10 +45,18 @@ def before_request():
         add_preset_data()
         first_request_done = True
 
-# 创建数据库和表
-@app.route('/')
-def index():
-    return render_template('index.html')
+#清空临时数据表
+@app.route('/api/clear_temporary_grids', methods=['POST'])
+def clear_temporary_grids():
+    try:
+        # 删除TemporaryUserInputs表中的所有记录
+        TemporaryUserInputs.query.delete()
+        db.session.commit()
+        return jsonify({'message': 'Temporary grids cleared successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
+
 
 @app.route('/api/grids', methods=['POST'])
 def save_grid():
@@ -118,6 +129,9 @@ def delete_grid(id):
     db.session.delete(grid)
     db.session.commit()
     return jsonify({'message': 'Grid deleted successfully!'})
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
