@@ -54,3 +54,34 @@ function addWordToGrid() {
         console.error('Error:', error);
     });
 }
+
+function clearAll() {
+  fetch('/api/clear_temporary_grids', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message); // 弹出消息提示
+    if (data.message.includes('successfully')) {
+      // 如果清空成功，可以在这里编写清空前端格子的代码
+      clearGridsOnFrontend();
+    }
+  })
+  .catch(error => {
+    console.error('Error clearing temporary grids:', error);
+    alert('Failed to clear grids: ' + error);
+  });
+}
+
+// 前端清空格子的函数示例
+function clearGridsOnFrontend() {
+  for (let i = 1; i <= 9; i++) { // 假设有9个格子
+    const gridElement = document.getElementById(`grid${i}`);
+    if(gridElement) {
+      gridElement.textContent = ''; // 清空格子内容
+    }
+  }
+}

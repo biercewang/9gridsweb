@@ -45,7 +45,7 @@ def before_request():
         add_preset_data()
         first_request_done = True
 
-#清空临时数据表
+#全部清空
 @app.route('/api/clear_temporary_grids', methods=['POST'])
 def clear_temporary_grids():
     try:
