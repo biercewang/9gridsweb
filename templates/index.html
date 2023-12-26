@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识九宫格</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<!-- 添加更多的CSS或JavaScript文件 -->
+</head>
+<body>
+
+<!-- 标题输入区域 -->
+<div id="title-input-area">
+    <label for="title-input">主题:</label>
+    <input type="text" id="title-input" placeholder="输入主题">
+    <button onclick="performQuery()">AI查询</button>
+</div>
+
+<!-- 输入和按钮区域 -->
+<div id="input-area">
+    <label for="input-text">要点:</label>
+    <textarea id="input-text" rows="6"></textarea> <!-- 设置为6行 -->
+    <div>
+        <button onclick="addWordToGrid()">加入格子</button>
+        <button onclick="organizeInputWithAI()">AI整理</button>
+        <button onclick="clearInputText()">清除要点</button>
+    </div>
+</div>
+
+<!-- 九宫格显示区域 -->
+<div id="grid-container">
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+</div>
+
+<!-- 保存、读取、清除格子和全部清空按钮 -->
+<div id="action-buttons">
+    <button onclick="saveWords()">保存格子</button>
+    <button onclick="loadWords()">读取格子</button>
+    <button onclick="clearGrid()">清除格子</button>
+    <button onclick="clearAll()">全部清空</button>
+</div>
+
+<!-- 表格视图 -->
+<div id="record-table-container">
+    <table id="record-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>主题</th>
+                <th>左上</th>
+                <th>上</th>
+                <th>右上</th>
+                <th>左</th>
+                <th>中</th>
+                <th>右</th>
+                <th>左下</th>
+                <th>下</th>
+                <th>右下</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 动态填充数据 -->
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

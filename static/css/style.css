@@ -1,0 +1,112 @@
+/* 主体布局 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+/* 标题输入区域 */
+#title-input-area {
+    margin-bottom: 20px;
+}
+
+#title-input-area label {
+    margin-right: 10px;
+}
+
+#title-input-area input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+#title-input-area button {
+    padding: 5px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* 输入和按钮区域 */
+#input-area {
+    margin-bottom: 20px;
+}
+
+#input-area textarea {
+    width: calc(100% - 50px);
+    padding: 5px;
+    margin-right: 10px;
+}
+
+#input-area div {
+    text-align: center; /* 将按钮居中 */
+    margin-top: 10px;
+}
+
+#input-area button {
+    padding: 5px 15px;
+    margin: 0 10px; /* 为按钮添加水平间距 */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: inline-block; /* 确保按钮可以被正确居中 */
+}
+
+/* 九宫格显示区域 */
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 30px; /* 增加底部外边距 */
+    max-width: 600px;
+    margin: auto;
+}
+
+.grid-item {
+    border: 2px solid #ddd; /* 给格子添加边框 */
+    height: 150px; /* 设置格子的高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff; /* 设置格子的背景色 */
+}
+
+/* 保存、读取、清除格子和全部清空按钮 */
+#action-buttons {
+    text-align: center;
+    margin-top: 30px; /* 增加顶部外边距 */
+}
+
+#action-buttons button {
+    padding: 5px 15px;
+    margin: 0 10px; /* 为按钮添加水平间距 */
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: inline-block; /* 确保按钮可以被正确居中 */
+}
+
+/* 表格视图 */
+#record-table-container {
+    margin-top: 20px;
+}
+
+#record-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#record-table th, #record-table td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+#record-table th {
+    background-color: #f2f2f2;
+}
+
+/* 添加更多的样式以满足你的需求 */
