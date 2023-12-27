@@ -28,32 +28,46 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addWordToGrid() {
-    const note = document.getElementById('input-text').value;
-    fetch('/api/add_to_grid', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({note: note})
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        if(data.grid_position) {
-            // 在前端九宫格的相应位置显示内容
-            const gridItem = document.querySelector(`#grid-container .grid-item:nth-child(${data.grid_position})`);
-            gridItem.textContent = note;
-            // 清空输入框
-            document.getElementById('input-text').value = '';
-        } else {
-            // 处理错误或所有格子都已填满的情况
-            alert(data.message);
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+  const note = document.getElementById('input-text').value;
+  const lines = note.split('\n').filter(line => line.trim() !== '');  // 过滤空行
+  let lineIndex = 0;  // 当前处理的行索引
+
+  // 定义一个函数处理每一行文本
+  function handleLine() {
+      if (lineIndex < lines.length) {
+          fetch('/api/add_to_grid', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ note: lines[lineIndex] })  // 发送当前行文本
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Success:', data);
+              if(data.grid_position) {
+                  // 在前端九宫格的相应位置显示内容
+                  const gridItem = document.querySelector(`#grid-container .grid-item:nth-child(${data.grid_position})`);
+                  gridItem.textContent = lines[lineIndex];
+                  lineIndex++;  // 移动到下一行
+                  handleLine();  // 递归处理下一行
+              } else {
+                  // 处理错误或所有格子都已填满的情况
+                  alert(data.message);
+              }
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+          });
+      } else {
+          // 所有行都已处理完毕，可以清空输入框
+          document.getElementById('input-text').value = '';
+      }
+  }
+
+  handleLine();  // 开始处理第一行
 }
+
 
 function clearAll() {
   fetch('/api/clear_temporary_grids', {

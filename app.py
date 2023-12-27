@@ -111,8 +111,6 @@ def add_to_grid():
 
     return jsonify({'message': 'All grids are filled'}), 400
 
-
-
 @app.route('/api/grids/<int:id>', methods=['PUT'])
 def update_grid(id):
     # 示例：更新特定ID的格子
