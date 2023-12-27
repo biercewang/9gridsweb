@@ -161,6 +161,29 @@ def update_grid(gridNumber):
     else:
         return jsonify({'message': 'Temporary input not found'}), 404
 
+@app.route('/api/grids/swap', methods=['POST'])
+def swap_grids():
+    data = request.json
+    sourceGridNumber = data.get('sourceGridNumber')
+    targetGridNumber = data.get('targetGridNumber')
+    
+    session_id = 'some_session_id'  # 假设使用静态的session_id
+    temp_input = TemporaryUserInputs.query.filter_by(session_id=session_id).first()
+    if temp_input:
+        sourceGridField = f'grid{sourceGridNumber}'
+        targetGridField = f'grid{targetGridNumber}'
+        
+        # 交换两个格子的内容
+        tempContent = getattr(temp_input, sourceGridField)
+        setattr(temp_input, sourceGridField, getattr(temp_input, targetGridField))
+        setattr(temp_input, targetGridField, tempContent)
+        db.session.commit()
+        
+        return jsonify({'message': 'Grids swapped successfully'}), 200
+    else:
+        return jsonify({'message': 'Temporary input not found'}), 404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

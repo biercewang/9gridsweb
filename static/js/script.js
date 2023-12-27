@@ -240,3 +240,45 @@ function editGrid(gridNumber) {
         });
     }
 }
+
+let sourceGridNumber = null;  // 源格子编号
+
+function dragStart(event) {
+    sourceGridNumber = event.target.id.replace('grid', '');  // 获取源格子编号
+    event.dataTransfer.setData("text", event.target.id);  // 设置传输数据
+}
+
+function allowDrop(event) {
+    event.preventDefault();  // 防止默认处理（默认不允许放置）
+}
+
+function drop(event, targetGridNumber) {
+    event.preventDefault();
+    const sourceGridId = event.dataTransfer.getData("text");
+    const targetGridId = `grid${targetGridNumber}`;
+    
+    // 交换两个格子的内容
+    const sourceGridElement = document.getElementById(sourceGridId);
+    const targetGridElement = document.getElementById(targetGridId);
+    const tempContent = sourceGridElement.textContent;
+    sourceGridElement.textContent = targetGridElement.textContent;
+    targetGridElement.textContent = tempContent;
+
+    // 发送更新请求到后端
+    fetch('/api/grids/swap', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sourceGridNumber: sourceGridNumber, targetGridNumber: targetGridNumber })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Swap Success:', data);
+    })
+    .catch((error) => {
+        console.error('Swap Error:', error);
+        alert('交换失败');
+    });
+}
+
