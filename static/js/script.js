@@ -78,7 +78,7 @@ function clearAll() {
   })
   .then(response => response.json())
   .then(data => {
-    alert(data.message); // 弹出消息提示
+    // alert(data.message); // 弹出消息提示
     if (data.message.includes('successfully')) {
       // 如果清空成功，可以在这里编写清空前端格子的代码
       clearGridsOnFrontend();
@@ -179,5 +179,36 @@ function updateRecordTableView(id,title, grids) {
     for (let i = 0; i < grids.length; i++) {
         cell = newRow.insertCell(i + 2);  // 插入各个格子数据
         cell.textContent = grids[i];
+    }
+}
+
+//读取数据库到九宫格
+function promptForIdAndLoadGrid() {
+    // 弹出对话框让用户输入ID
+    const gridId = prompt("请输入要读取的格子的ID:");
+    if (gridId) {
+        fetch(`/api/grids/${gridId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 将数据填充到九宫格中
+            for(let i = 1; i <= 9; i++) {
+                const gridContent = data[`grid${i}`];
+                const gridElement = document.getElementById(`grid${i}`);
+                if(gridElement) {
+                    gridElement.textContent = gridContent || '';  // 使用空字符串替代null或undefined
+                }
+            }
+            // 可以根据需要更新其他元素，如标题等
+            document.getElementById('title-input').value = data.title || '';
+        })
+        .catch(error => {
+            console.error('Error fetching grid:', error);
+            alert('读取失败，请确保输入了正确的ID');
+        });
     }
 }

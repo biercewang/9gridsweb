@@ -123,6 +123,27 @@ def save_grid():
     db.session.commit()
     return jsonify({'message': 'Grid saved successfully!', 'id': new_grid.id}), 201
 
+@app.route('/api/grids/<int:id>', methods=['GET'])
+def get_grid(id):
+    grid = SavedGrids.query.get(id)
+    if grid:
+        # 将grid的数据转换成字典或者其他形式
+        return jsonify({
+            'id': grid.id,
+            'title': grid.title,
+            'grid1': grid.grid1,
+            'grid2': grid.grid2,
+            'grid3': grid.grid3,
+            'grid4': grid.grid4,
+            'grid5': grid.grid5,
+            'grid6': grid.grid6,
+            'grid7': grid.grid7,
+            'grid8': grid.grid8,
+            'grid9': grid.grid9
+        })
+    else:
+        return jsonify({'message': 'Grid not found'}), 404
+
 
 
 if __name__ == '__main__':
