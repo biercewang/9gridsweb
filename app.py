@@ -58,15 +58,15 @@ def clear_temporary_grids():
         return jsonify({'message': str(e)}), 500
 
 
-@app.route('/api/grids', methods=['POST'])
-def save_grid():
-    # 示例：从请求中获取数据并保存到数据库
-    # 你需要根据实际情况调整获取数据的方式和保存逻辑
-    data = request.json
-    new_grid = SavedGrids(title=data.get('title'), grid1=data.get('grid1'))
-    db.session.add(new_grid)
-    db.session.commit()
-    return jsonify({'message': 'Grid saved successfully!'}), 201
+# @app.route('/api/grids', methods=['POST'])
+# def save_grid():
+#     # 示例：从请求中获取数据并保存到数据库
+#     # 你需要根据实际情况调整获取数据的方式和保存逻辑
+#     data = request.json
+#     new_grid = SavedGrids(title=data.get('title'), grid1=data.get('grid1'))
+#     db.session.add(new_grid)
+#     db.session.commit()
+#     return jsonify({'message': 'Grid saved successfully!'}), 201
 
 @app.route('/api/grids', methods=['GET'])
 def get_grids():
@@ -113,22 +113,48 @@ def add_to_grid():
 
     return jsonify({'message': 'All grids are filled'}), 400
 
-@app.route('/api/grids/<int:id>', methods=['PUT'])
-def update_grid(id):
-    # 示例：更新特定ID的格子
-    grid = SavedGrids.query.get_or_404(id)
-    data = request.json
-    grid.title = data.get('title', grid.title)
-    db.session.commit()
-    return jsonify({'message': 'Grid updated successfully!'})
 
-@app.route('/api/grids/<int:id>', methods=['DELETE'])
-def delete_grid(id):
-    # 示例：删除特定ID的格子
-    grid = SavedGrids.query.get_or_404(id)
-    db.session.delete(grid)
+@app.route('/api/grids', methods=['POST'])
+def save_grid():
+    data = request.json
+    new_grid = SavedGrids(
+        title=data['title'],
+        grid1=data['grids'][0],
+        grid2=data['grids'][1],
+        grid3=data['grids'][2],
+        grid4=data['grids'][3],
+        grid5=data['grids'][4],
+        grid6=data['grids'][5],
+        grid7=data['grids'][6],
+        grid8=data['grids'][7],
+        grid9=data['grids'][8]
+    )
+    db.session.add(new_grid)
     db.session.commit()
-    return jsonify({'message': 'Grid deleted successfully!'})
+    return jsonify({'message': 'Grid saved successfully!'}), 201
+
+
+
+
+
+
+
+# @app.route('/api/grids/<int:id>', methods=['PUT'])
+# def update_grid(id):
+#     # 示例：更新特定ID的格子
+#     grid = SavedGrids.query.get_or_404(id)
+#     data = request.json
+#     grid.title = data.get('title', grid.title)
+#     db.session.commit()
+#     return jsonify({'message': 'Grid updated successfully!'})
+
+# @app.route('/api/grids/<int:id>', methods=['DELETE'])
+# def delete_grid(id):
+#     # 示例：删除特定ID的格子
+#     grid = SavedGrids.query.get_or_404(id)
+#     db.session.delete(grid)
+#     db.session.commit()
+#     return jsonify({'message': 'Grid deleted successfully!'})
 
 
 

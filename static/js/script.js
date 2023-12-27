@@ -104,3 +104,47 @@ function clearGridsOnFrontend() {
 function clearInputText() {
   document.getElementById('input-text').value = '';  // 清空textarea
 }
+
+//保存格子内容到数据库
+function saveGrids() {
+  const title = document.getElementById('title-input').value;
+  const grids = [];
+  for(let i = 1; i <= 9; i++) {
+      const gridContent = document.getElementById(`grid${i}`).textContent;
+      grids.push(gridContent);
+  }
+
+  fetch('/api/grids', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({title: title, grids: grids})
+  })
+  .then(response => response.json())
+  .then(data => {
+      console.log('Save Success:', data);
+      // 更新前端视图
+      updateRecordTableView(title, grids);
+  })
+  .catch((error) => {
+      console.error('Save Error:', error);
+  });
+}
+
+function updateRecordTableView(title, grids) {
+  const tableBody = document.getElementById('record-table').querySelector('tbody');
+  const newRow = tableBody.insertRow(-1);  // 在表格末尾插入新行
+
+  // 插入新行的单元格并填充数据
+  let cell = newRow.insertCell(0);  // 插入ID单元格
+  cell.textContent = '新';  // 如果你能从后端获取真实的ID，这里可以替换为真实ID
+
+  cell = newRow.insertCell(1);  // 插入标题单元格
+  cell.textContent = title;
+
+  for (let i = 0; i < grids.length; i++) {
+      cell = newRow.insertCell(i + 2);  // 插入各个格子数据
+      cell.textContent = grids[i];
+  }
+}
