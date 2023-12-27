@@ -105,26 +105,86 @@ def add_to_grid():
 
     return jsonify({'message': 'All grids are filled'}), 400
 
+#保存格子
+# @app.route('/api/grids', methods=['POST'])
+# def save_grid():
+#     data = request.json
+#     new_grid = SavedGrids(
+#         title=data['title'],
+#         grid1=data['grids'][0],
+#         grid2=data['grids'][1],
+#         grid3=data['grids'][2],
+#         grid4=data['grids'][3],
+#         grid5=data['grids'][4],
+#         grid6=data['grids'][5],
+#         grid7=data['grids'][6],
+#         grid8=data['grids'][7],
+#         grid9=data['grids'][8]
+#     )
+#     db.session.add(new_grid)
+#     db.session.commit()
+#     return jsonify({'message': 'Grid saved successfully!', 'id': new_grid.id}), 201
 
 @app.route('/api/grids', methods=['POST'])
 def save_grid():
     data = request.json
+    title = data.get('title')
+    grids = data.get('grids')
+    overwrite = data.get('overwrite')
+
+    if not title.strip():  # 后端对标题是否为空进行检查
+        return jsonify({'message': 'Title is required'}), 400
+
+    existing_record = SavedGrids.query.filter_by(title=title).first()
+
+    if existing_record and overwrite:
+        # 如果找到同名记录且用户选择覆盖
+        return update_existing_grid(existing_record, grids)
+    elif not existing_record:
+        # 如果没有找到同名记录，创建新记录
+        return create_new_grid(title, grids)
+    else:
+        # 如果存在同名记录但用户没有选择覆盖
+        return jsonify({'message': 'Record with the same title exists'}), 409
+
+def create_new_grid(title, grids):
     new_grid = SavedGrids(
-        title=data['title'],
-        grid1=data['grids'][0],
-        grid2=data['grids'][1],
-        grid3=data['grids'][2],
-        grid4=data['grids'][3],
-        grid5=data['grids'][4],
-        grid6=data['grids'][5],
-        grid7=data['grids'][6],
-        grid8=data['grids'][7],
-        grid9=data['grids'][8]
+        title=title,
+        grid1=grids[0],
+        grid2=grids[1],
+        grid3=grids[2],
+        grid4=grids[3],
+        grid5=grids[4],
+        grid6=grids[5],
+        grid7=grids[6],
+        grid8=grids[7],
+        grid9=grids[8]
     )
     db.session.add(new_grid)
     db.session.commit()
-    return jsonify({'message': 'Grid saved successfully!', 'id': new_grid.id}), 201
+    return jsonify({'message': 'New grid created successfully!', 'id': new_grid.id}), 201
 
+def update_existing_grid(record, grids):
+    record.grid1 = grids[0]
+    record.grid2 = grids[1]
+    record.grid3 = grids[2]
+    record.grid4 = grids[3]
+    record.grid5 = grids[4]
+    record.grid6 = grids[5]
+    record.grid7 = grids[6]
+    record.grid8 = grids[7]
+    record.grid9 = grids[8]
+    db.session.commit()
+    return jsonify({'message': 'Grid updated successfully', 'id': record.id}), 200
+
+@app.route('/api/check_title/<title>', methods=['GET'])
+def check_title(title):
+    existing_record = SavedGrids.query.filter_by(title=title).first()
+    return jsonify({'exists': bool(existing_record)})
+
+
+
+#读取格子
 @app.route('/api/grids/<int:id>', methods=['GET'])
 def get_grid(id):
     grid = SavedGrids.query.get(id)
@@ -163,6 +223,7 @@ def update_grid(gridNumber):
     else:
         return jsonify({'message': 'Temporary input not found'}), 404
 
+#交换格子
 @app.route('/api/grids/swap', methods=['POST'])
 def swap_grids():
     data = request.json

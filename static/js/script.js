@@ -106,64 +106,86 @@ function clearInputText() {
 }
 
 //保存格子内容到数据库
-function saveGrids() {
-  // 获取标题和格子内容
-  const title = document.getElementById('title-input').value;
-  const grids = [];
-  for(let i = 1; i <= 9; i++) {
-      const gridContent = document.getElementById(`grid${i}`).textContent;
-      grids.push(gridContent);
-  }
+// function saveGrids() {
+//     const title = document.getElementById('title-input').value;
+//     const grids = [];
+//     for(let i = 1; i <= 9; i++) {
+//         const gridContent = document.getElementById(`grid${i}`).textContent;
+//         grids.push(gridContent);
+//     }
 
-  // 发送请求到后端保存数据
-  fetch('/api/grids', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({title: title, grids: grids})
-  })
-  .then(response => response.json())
-  .then(data => {
-      console.log('Save Success:', data);
-      // 可以在这里更新前端视图
-      // 例如，重新加载或添加新的行到下方的列表清单中
-  })
-  .catch((error) => {
-      console.error('Save Error:', error);
-  });
-}
+//     fetch('/api/grids', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({title: title, grids: grids})
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log('Save Success:', data);
+//         // 更新前端视图
+//         if(data.id) {
+//             updateRecordTableView(data.id, title, grids);
+//         } else {
+//             // 如果没有从后端获取到ID，你可能需要处理这种情况
+//             console.error('No ID returned from the backend');
+//         }
+//     })
+//     .catch((error) => {
+//         console.error('Save Error:', error);
+//     });
+// }
 
 function saveGrids() {
-    const title = document.getElementById('title-input').value;
+    const title = document.getElementById('title-input').value.trim();
+    if (!title) {
+        alert("请输入主题后再保存格子。");
+        return; // 如果标题为空，停止执行并提示用户
+    }
     const grids = [];
-    for(let i = 1; i <= 9; i++) {
+    for (let i = 1; i <= 9; i++) {
         const gridContent = document.getElementById(`grid${i}`).textContent;
         grids.push(gridContent);
     }
 
-    fetch('/api/grids', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({title: title, grids: grids})
-    })
+    // 首先检查是否已存在同名标题的记录
+    fetch(`/api/check_title/${title}`)
     .then(response => response.json())
     .then(data => {
-        console.log('Save Success:', data);
-        // 更新前端视图
-        if(data.id) {
-            updateRecordTableView(data.id, title, grids);
-        } else {
-            // 如果没有从后端获取到ID，你可能需要处理这种情况
-            console.error('No ID returned from the backend');
+        if (data.exists) {
+            // 如果存在同名记录，提示用户是否覆盖
+            const overwrite = confirm("已存在同名主题的记录。是否覆盖?");
+            if (!overwrite) return;  // 如果用户选择不覆盖，则停止
         }
+
+        // 保存或覆盖格子
+        fetch('/api/grids', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({title: title, grids: grids, overwrite: data.exists})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Save Success:', data);
+            // 更新前端视图
+            if(data.id) {
+                updateRecordTableView(data.id, title, grids);
+            } else {
+                console.error('No ID returned from the backend');
+            }
+        })
+        .catch((error) => {
+            console.error('Save Error:', error);
+        });
     })
-    .catch((error) => {
-        console.error('Save Error:', error);
+    .catch(error => {
+        console.error('Error checking title:', error);
     });
 }
+
 
 function updateRecordTableView(id,title, grids) {
     const tableBody = document.getElementById('record-table').querySelector('tbody');
