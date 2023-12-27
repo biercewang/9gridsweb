@@ -184,6 +184,18 @@ def swap_grids():
         return jsonify({'message': 'Temporary input not found'}), 404
 
 
+#删除条目
+@app.route('/api/grids/<int:id>', methods=['DELETE'])
+def delete_grid(id):
+    try:
+        grid = SavedGrids.query.get_or_404(id)
+        db.session.delete(grid)
+        db.session.commit()
+        return jsonify({'message': 'Grid deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

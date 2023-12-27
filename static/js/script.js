@@ -282,3 +282,28 @@ function drop(event, targetGridNumber) {
     });
 }
 
+//删除条目
+function promptForIdAndDeleteRecord() {
+    const id = prompt('请输入要删除的条目ID：');
+    if (id) {
+        fetch(`/api/grids/${id}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Delete Success:', data);
+            alert(data.message);  // 显示操作结果
+            location.reload();  // 刷新页面以更新视图
+        })
+        .catch((error) => {
+            console.error('Delete Error:', error);
+        });
+    }
+}
+
+//导出条目
+function promptForIdAndExportRecord() {
+    const id = prompt('请输入要导出的条目ID：');
+    if (id) {
+        // 根据你的实际情况实现导出逻辑
+        // 例如下载文件或显示导出的数据
+    }
+}

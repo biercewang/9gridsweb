@@ -54,6 +54,21 @@ body {
     display: inline-block; /* 确保按钮可以被正确居中 */
 }
 
+/* 加入格子按钮样式 */
+#input-area button:nth-child(1) {
+    background-color: #28a745; /* 绿色 */
+}
+
+/* AI整理按钮样式 */
+#input-area button:nth-child(2) {
+    background-color: #007bff; /* 蓝色 */
+}
+
+/* 清除要点按钮样式 */
+#input-area button:nth-child(3) {
+    background-color: #dc3545; /* 红色 */
+}
+
 /* 九宫格显示区域 */
 #grid-container {
     display: grid;
@@ -73,7 +88,7 @@ body {
     background-color: #fff; /* 设置格子的背景色 */
 }
 
-/* 保存、读取、清除格子和全部清空按钮 */
+/* 保存、读取、清除格子按钮 */
 #action-buttons {
     text-align: center;
     margin-top: 30px; /* 增加顶部外边距 */
@@ -87,6 +102,21 @@ body {
     border: none;
     cursor: pointer;
     display: inline-block; /* 确保按钮可以被正确居中 */
+}
+
+/* 保存格子按钮样式 */
+#action-buttons button:nth-child(1) {
+    background-color: #28a745; /* 绿色 */
+}
+
+/* 读取格子按钮样式 */
+#action-buttons button:nth-child(2) {
+    background-color: #007bff; /* 蓝色 */
+}
+
+/* 清除格子按钮样式 */
+#action-buttons button:nth-child(3) {
+    background-color: #dc3545; /* 红色 */
 }
 
 /* 表格视图 */
@@ -109,4 +139,56 @@ body {
     background-color: #f2f2f2;
 }
 
-/* 添加更多的样式以满足你的需求 */
+/* 操作按钮样式 */
+#record-table-actions {
+    text-align: center;  /* 将按钮居中 */
+    margin-top: 20px;    /* 与上方元素保持一定距离 */
+}
+
+/* 表格操作按钮公共样式 */
+#record-table-actions button {
+    padding: 5px 15px;
+    margin: 0 10px;      /* 为按钮添加水平间距 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: inline-block; /* 确保按钮可以被正确居中 */
+}
+
+/* 删除按钮颜色 */
+.delete-btn {
+    background-color: #dc3545;
+}
+
+/* 导出按钮颜色 */
+.export-btn {
+    background-color: #28a745;
+}
+
+/* 自定义悬停提示样式 */
+[data-tooltip] {
+    position: relative;
+  }
+  
+  [data-tooltip]:before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 20px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  
+  [data-tooltip]:hover:before {
+    opacity: 1;
+    visibility: visible;
+  }
+  
