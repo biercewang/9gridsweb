@@ -101,8 +101,10 @@ def add_to_grid():
         temp_input = TemporaryUserInputs(session_id='some_session_id', input_type='grid')
         db.session.add(temp_input)
 
+    fill_sequence = [5, 4, 6, 2, 8, 1, 3, 7, 9]
+
     # 寻找第一个空的格子并保存内容
-    for i in range(1, 10):  # 假设你有9个格子
+    for i in fill_sequence:
         grid_field = f'grid{i}'
         if getattr(temp_input, grid_field) == '' or getattr(temp_input, grid_field) is None:
             setattr(temp_input, grid_field, note)
