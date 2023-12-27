@@ -107,6 +107,7 @@ function clearInputText() {
 
 //保存格子内容到数据库
 function saveGrids() {
+  // 获取标题和格子内容
   const title = document.getElementById('title-input').value;
   const grids = [];
   for(let i = 1; i <= 9; i++) {
@@ -114,6 +115,7 @@ function saveGrids() {
       grids.push(gridContent);
   }
 
+  // 发送请求到后端保存数据
   fetch('/api/grids', {
       method: 'POST',
       headers: {
@@ -124,27 +126,58 @@ function saveGrids() {
   .then(response => response.json())
   .then(data => {
       console.log('Save Success:', data);
-      // 更新前端视图
-      updateRecordTableView(title, grids);
+      // 可以在这里更新前端视图
+      // 例如，重新加载或添加新的行到下方的列表清单中
   })
   .catch((error) => {
       console.error('Save Error:', error);
   });
 }
 
-function updateRecordTableView(title, grids) {
-  const tableBody = document.getElementById('record-table').querySelector('tbody');
-  const newRow = tableBody.insertRow(-1);  // 在表格末尾插入新行
+function saveGrids() {
+    const title = document.getElementById('title-input').value;
+    const grids = [];
+    for(let i = 1; i <= 9; i++) {
+        const gridContent = document.getElementById(`grid${i}`).textContent;
+        grids.push(gridContent);
+    }
 
-  // 插入新行的单元格并填充数据
-  let cell = newRow.insertCell(0);  // 插入ID单元格
-  cell.textContent = '新';  // 如果你能从后端获取真实的ID，这里可以替换为真实ID
+    fetch('/api/grids', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({title: title, grids: grids})
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Save Success:', data);
+        // 更新前端视图
+        if(data.id) {
+            updateRecordTableView(data.id, title, grids);
+        } else {
+            // 如果没有从后端获取到ID，你可能需要处理这种情况
+            console.error('No ID returned from the backend');
+        }
+    })
+    .catch((error) => {
+        console.error('Save Error:', error);
+    });
+}
 
-  cell = newRow.insertCell(1);  // 插入标题单元格
-  cell.textContent = title;
+function updateRecordTableView(id,title, grids) {
+    const tableBody = document.getElementById('record-table').querySelector('tbody');
+    const newRow = tableBody.insertRow(-1);  // 在表格末尾插入新行
 
-  for (let i = 0; i < grids.length; i++) {
-      cell = newRow.insertCell(i + 2);  // 插入各个格子数据
-      cell.textContent = grids[i];
-  }
+    // 插入新行的单元格并填充数据
+    let cell = newRow.insertCell(0);  // 插入ID单元格
+    cell.textContent = id;  // 使用从后端获取的真实ID
+
+    cell = newRow.insertCell(1);  // 插入标题单元格
+    cell.textContent = title;
+
+    for (let i = 0; i < grids.length; i++) {
+        cell = newRow.insertCell(i + 2);  // 插入各个格子数据
+        cell.textContent = grids[i];
+    }
 }
