@@ -144,6 +144,22 @@ def get_grid(id):
     else:
         return jsonify({'message': 'Grid not found'}), 404
 
+#双击编辑格子
+@app.route('/api/grids/update_grid/<int:gridNumber>', methods=['PUT'])
+def update_grid(gridNumber):
+    data = request.json
+    content = data.get('content')
+    
+    # 假设你使用的session_id是静态的，实际情况你可能需要从请求中获取或生成
+    session_id = 'some_session_id'
+    temp_input = TemporaryUserInputs.query.filter_by(session_id=session_id).first()
+    if temp_input:
+        grid_field = f'grid{gridNumber}'
+        setattr(temp_input, grid_field, content)
+        db.session.commit()
+        return jsonify({'message': 'Grid updated successfully'}), 200
+    else:
+        return jsonify({'message': 'Temporary input not found'}), 404
 
 
 if __name__ == '__main__':

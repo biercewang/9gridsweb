@@ -212,3 +212,31 @@ function promptForIdAndLoadGrid() {
         });
     }
 }
+
+//双击编辑格子
+function editGrid(gridNumber) {
+    const gridElement = document.getElementById(`grid${gridNumber}`);
+    const originalContent = gridElement.textContent;
+    const newContent = prompt("编辑格子内容:", originalContent);
+
+    if (newContent !== null && newContent !== originalContent) {
+        gridElement.textContent = newContent;  // 更新页面上的内容
+
+        // 发送更新请求到后端
+        fetch(`/api/grids/update_grid/${gridNumber}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: newContent })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Update Success:', data);
+        })
+        .catch((error) => {
+            console.error('Update Error:', error);
+            alert('更新失败');
+        });
+    }
+}
