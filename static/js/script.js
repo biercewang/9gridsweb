@@ -350,3 +350,26 @@ function promptForIdAndExportRecord() {
         });
     }
 }
+
+//刷新后删除数据库临时文件清除格子数据
+window.onload = function() {
+    // 确保不会覆盖其他已经定义的 onload 事件
+    // ...
+
+    // 添加清除临时格子的请求
+    fetch('/api/clear_temporary_grids', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Temporary grids cleared:', data.message);
+        // 你可以在这里添加更多的代码来处理清除成功后的逻辑
+    })
+    .catch(error => console.error('Error clearing temporary grids:', error));
+
+    // 你原有的 onload 代码
+    // ...
+};

@@ -47,7 +47,7 @@ def before_request():
         add_preset_data()
         first_request_done = True
 
-#全部清空
+#清空格子数据
 @app.route('/api/clear_temporary_grids', methods=['POST'])
 def clear_temporary_grids():
     try:
@@ -59,7 +59,7 @@ def clear_temporary_grids():
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-
+#获取数据库中格子数据
 @app.route('/api/grids', methods=['GET'])
 def get_grids():
     grids = SavedGrids.query.all()
@@ -80,6 +80,7 @@ def get_grids():
         })
     return jsonify(grid_data)
 
+#将主题写入到格子中
 @app.route('/api/add_to_grid', methods=['POST'])
 def add_to_grid():
     data = request.json
@@ -125,7 +126,9 @@ def add_to_grid():
 #     db.session.commit()
 #     return jsonify({'message': 'Grid saved successfully!', 'id': new_grid.id}), 201
 
+#保存格子
 @app.route('/api/grids', methods=['POST'])
+#检查是否重复主题
 def save_grid():
     data = request.json
     title = data.get('title')
@@ -147,6 +150,7 @@ def save_grid():
         # 如果存在同名记录但用户没有选择覆盖
         return jsonify({'message': 'Record with the same title exists'}), 409
 
+#建立新记录
 def create_new_grid(title, grids):
     new_grid = SavedGrids(
         title=title,
@@ -164,6 +168,7 @@ def create_new_grid(title, grids):
     db.session.commit()
     return jsonify({'message': 'New grid created successfully!', 'id': new_grid.id}), 201
 
+#更新已有记录
 def update_existing_grid(record, grids):
     record.grid1 = grids[0]
     record.grid2 = grids[1]
@@ -177,11 +182,11 @@ def update_existing_grid(record, grids):
     db.session.commit()
     return jsonify({'message': 'Grid updated successfully', 'id': record.id}), 200
 
+#检查是否有相同主题
 @app.route('/api/check_title/<title>', methods=['GET'])
 def check_title(title):
     existing_record = SavedGrids.query.filter_by(title=title).first()
     return jsonify({'exists': bool(existing_record)})
-
 
 
 #读取格子
