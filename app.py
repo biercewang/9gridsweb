@@ -1,8 +1,10 @@
 #app.py
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file, make_response
 from config import DevelopmentConfig
 from database import db, init_db
 from models import db, SavedGrids,TemporaryUserInputs
+from io import BytesIO
+import markdown
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -195,6 +197,23 @@ def delete_grid(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
+
+#导出为MD格式文件
+@app.route('/api/export_record/<int:id>', methods=['GET'])
+def export_record(id):
+    record = SavedGrids.query.get_or_404(id)
+    md_content = f"# {record.title}\n\n"
+    for i in range(1, 10):
+        grid_content = getattr(record, f'grid{i}')
+        if grid_content:
+            md_content += f"- Grid {i}: {grid_content}\n"
+
+    # 添加引用日期
+    if record.save_time:
+        md_content += f"\nSaved at: {record.save_time.strftime('%Y-%m-%d %H:%M')}"
+
+    # 返回包含Markdown内容和标题的JSON
+    return jsonify(markdown=md_content, title=record.title)
 
 
 if __name__ == '__main__':

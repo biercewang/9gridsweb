@@ -301,9 +301,30 @@ function promptForIdAndDeleteRecord() {
 
 //导出条目
 function promptForIdAndExportRecord() {
-    const id = prompt('请输入要导出的条目ID：');
-    if (id) {
-        // 根据你的实际情况实现导出逻辑
-        // 例如下载文件或显示导出的数据
+    const id = prompt("请输入要导出的条目ID:");
+    if(id) {
+        fetch(`/api/export_record/${id}`)
+        .then(response => response.json())  // 假设后端返回JSON数据
+        .then(data => {
+            // 创建一个a标签用于下载
+            const element = document.createElement('a');
+            const file = new Blob([data.markdown], {type: 'text/plain'});
+            const title = data.title || 'grid';  // 如果后端没有提供标题，则使用默认的'grid'
+
+            element.href = URL.createObjectURL(file);
+            element.download = `${title}.md`;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+            document.body.removeChild(element); // 清理DOM
+
+            // 将Markdown内容复制到剪贴板
+            navigator.clipboard.writeText(data.markdown)
+            .then(() => alert('已复制到剪贴板'))
+            .catch(err => console.error('Error in copying text: ', err));
+        })
+        .catch(error => {
+            console.error('导出失败:', error);
+            alert('导出失败: ' + error.message);
+        });
     }
 }
