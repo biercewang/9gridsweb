@@ -99,3 +99,8 @@ function clearGridsOnFrontend() {
     }
   }
 }
+
+//前端清空要点框内容
+function clearInputText() {
+  document.getElementById('input-text').value = '';  // 清空textarea
+}
