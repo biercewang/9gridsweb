@@ -1,7 +1,17 @@
 // script.js
 
-// 页面加载完毕时获取并显示格子数据
+// 页面加载完毕时执行的程序
 document.addEventListener('DOMContentLoaded', function() {
+    // 绑定右键菜单事件到所有的.grid-item元素
+    document.querySelectorAll('.grid-item').forEach(item => {
+        item.addEventListener('contextmenu', (event) => {
+            event.preventDefault(); // 阻止默认的右键菜单
+            // 显示自定义的菜单
+            showCustomContextMenu(event.pageX, event.pageY, item.id);
+        });
+    });
+
+    // 页面加载完毕时获取并显示格子数据
     fetch('/api/grids')
     .then(response => response.json())
     .then(data => {
@@ -26,6 +36,36 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error:', error));
 });
+
+let currentGridNumber; // 当前右键点击的格子编号
+
+function showCustomContextMenu(x, y, gridId) {
+    const menu = document.getElementById('custom-context-menu');
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    if (x + menuWidth > windowWidth) {
+        x -= menuWidth;
+    }
+
+    if (y + menuHeight > windowHeight) {
+        y -= menuHeight;
+    }
+
+    menu.style.top = `${y}px`;
+    menu.style.left = `${x}px`;
+    menu.style.display = 'block';
+    
+    currentGridNumber = gridId.replace('grid', ''); // 提取格子编号
+}
+
+// 点击其他地方隐藏菜单
+window.addEventListener('click', () => {
+    document.getElementById('custom-context-menu').style.display = 'none';
+});
+
 
 function addWordToGrid() {
   const note = document.getElementById('input-text').value;
@@ -68,7 +108,6 @@ function addWordToGrid() {
   handleLine();  // 开始处理第一行
 }
 
-
 function clearAll() {
   fetch('/api/clear_temporary_grids', {
     method: 'POST',
@@ -104,38 +143,6 @@ function clearGridsOnFrontend() {
 function clearInputText() {
   document.getElementById('input-text').value = '';  // 清空textarea
 }
-
-//保存格子内容到数据库
-// function saveGrids() {
-//     const title = document.getElementById('title-input').value;
-//     const grids = [];
-//     for(let i = 1; i <= 9; i++) {
-//         const gridContent = document.getElementById(`grid${i}`).textContent;
-//         grids.push(gridContent);
-//     }
-
-//     fetch('/api/grids', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({title: title, grids: grids})
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log('Save Success:', data);
-//         // 更新前端视图
-//         if(data.id) {
-//             updateRecordTableView(data.id, title, grids);
-//         } else {
-//             // 如果没有从后端获取到ID，你可能需要处理这种情况
-//             console.error('No ID returned from the backend');
-//         }
-//     })
-//     .catch((error) => {
-//         console.error('Save Error:', error);
-//     });
-// }
 
 function saveGrids() {
     const title = document.getElementById('title-input').value.trim();
@@ -347,6 +354,25 @@ function promptForIdAndExportRecord() {
         .catch(error => {
             console.error('导出失败:', error);
             alert('导出失败: ' + error.message);
+        });
+    }
+}
+
+//右键删除指定格子内容
+function deleteGridContent(gridNumber) {
+    const gridElement = document.getElementById(`grid${gridNumber}`);
+    if(gridElement) {
+        // 发送DELETE请求到后端
+        fetch(`/api/grids/delete_content/${gridNumber}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message); // 可以在这里更新前端，例如显示一个消息
+            gridElement.textContent = ''; // 清空前端的格子内容
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     }
 }

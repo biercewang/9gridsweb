@@ -72,9 +72,18 @@
     </table>
 </div>
 
+<!-- 右键菜单 -->
 <div id="record-table-actions">
     <button class="export-btn" onclick="promptForIdAndExportRecord()">导出条目</button>
     <button class="delete-btn" onclick="promptForIdAndDeleteRecord()">删除条目</button>
+</div>
+
+<div id="custom-context-menu" style="display: none; position: absolute;">
+    <ul>
+        <li onclick="editGrid(currentGridNumber)">修改</li>
+        <li onclick="analyzeContent(currentGridNumber)">分析</li>
+        <li onclick="deleteGridContent(currentGridNumber)">删除</li>
+    </ul>
 </div>
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

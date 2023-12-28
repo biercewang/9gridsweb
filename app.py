@@ -43,16 +43,40 @@ def before_request():
         # 创建数据库和表
         with app.app_context():
             db.create_all()
+
         # 添加预设数据
         add_preset_data()
+
+        # 创建一个空的TemporaryUserInputs记录，如果还没有的话
+        if TemporaryUserInputs.query.count() == 0:
+            empty_temp_input = TemporaryUserInputs(
+                session_id='initial_session',  # 使用一个初始的session_id或其他逻辑来生成
+                # 保持所有grid字段为空
+            )
+            db.session.add(empty_temp_input)
+            db.session.commit()
+
         first_request_done = True
+# def before_request():
+#     global first_request_done
+#     if not first_request_done:
+#         # 创建数据库和表
+#         with app.app_context():
+#             db.create_all()
+#         # 添加预设数据
+#         add_preset_data()
+#         first_request_done = True
 
 #清空格子数据
 @app.route('/api/clear_temporary_grids', methods=['POST'])
 def clear_temporary_grids():
     try:
-        # 删除TemporaryUserInputs表中的所有记录
-        TemporaryUserInputs.query.delete()
+        # 获取所有临时用户输入条目
+        temp_inputs = TemporaryUserInputs.query.all()
+        for input in temp_inputs:
+            # 通过循环将每个格子的内容设置为空字符串
+            for i in range(1, 10):  # 九个格子
+                setattr(input, f'grid{i}', '')  # 设置属性值为空字符串
         db.session.commit()
         return jsonify({'message': 'Temporary grids cleared successfully'}), 200
     except Exception as e:
@@ -106,25 +130,6 @@ def add_to_grid():
 
     return jsonify({'message': 'All grids are filled'}), 400
 
-#保存格子
-# @app.route('/api/grids', methods=['POST'])
-# def save_grid():
-#     data = request.json
-#     new_grid = SavedGrids(
-#         title=data['title'],
-#         grid1=data['grids'][0],
-#         grid2=data['grids'][1],
-#         grid3=data['grids'][2],
-#         grid4=data['grids'][3],
-#         grid5=data['grids'][4],
-#         grid6=data['grids'][5],
-#         grid7=data['grids'][6],
-#         grid8=data['grids'][7],
-#         grid9=data['grids'][8]
-#     )
-#     db.session.add(new_grid)
-#     db.session.commit()
-#     return jsonify({'message': 'Grid saved successfully!', 'id': new_grid.id}), 201
 
 #保存格子
 @app.route('/api/grids', methods=['POST'])
@@ -280,6 +285,24 @@ def export_record(id):
 
     # 返回包含Markdown内容和标题的JSON
     return jsonify(markdown=md_content, title=record.title)
+
+#删除指定格子的内容
+@app.route('/api/grids/delete_content/<int:gridNumber>', methods=['DELETE'])
+def delete_grid_content(gridNumber):
+    try:
+        # 假设使用固定的session_id，实际应用中应该是动态的
+        session_id = 'some_session_id'
+        temp_input = TemporaryUserInputs.query.filter_by(session_id=session_id).first()
+        if temp_input:
+            grid_field = f'grid{gridNumber}'
+            setattr(temp_input, grid_field, '')  # 清空指定格子内容
+            db.session.commit()
+            return jsonify({'message': f'Grid {gridNumber} content deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Temporary input not found'}), 404
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
 
 
 if __name__ == '__main__':
