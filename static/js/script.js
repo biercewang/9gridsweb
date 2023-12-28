@@ -434,3 +434,32 @@ function analyzeContent(gridNumber) {
             alert('分析过程中出错。');
         });
 }
+
+function performAIQuery() {
+    const term = document.getElementById('title-input').value.trim();
+    if (!term) {
+        alert("请输入查询的术语。");
+        return;
+    }
+
+    fetch('/api/perform_query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ term: term })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.error) {
+            alert("错误: " + data.error);
+        } else if(data.content) {
+            // 使用返回的内容更新输入框
+            document.getElementById('input-text').value = data.content;
+        }
+    })
+    .catch(error => {
+        console.error('AI查询过程中出错:', error);
+        alert('AI查询过程中出错');
+    });
+}

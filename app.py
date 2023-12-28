@@ -5,11 +5,16 @@ from database import db, init_db
 from models import db, SavedGrids,TemporaryUserInputs
 from io import BytesIO
 import markdown
+from api_handler import APIHandler 
+import re
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 init_db(app)
 first_request_done = False
+
+api_handler = APIHandler() 
+
 
 def add_preset_data():
     # 检查是否已有预设数据
@@ -347,6 +352,25 @@ def delete_grid_content(gridNumber):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
+@app.route('/api/perform_query', methods=['POST'])
+def perform_query():
+    term = request.json.get('term', '').strip()
+    if term:
+        api_handler = APIHandler()  # 创建APIHandler实例
+        try:
+            response = api_handler.fetch_data(term)
+            # 提取内容
+            content = response.get('data', {}).get('choices', [{}])[0].get('content', '')
+
+            # 清理内容
+            content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+            content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+
+            return jsonify({'content': content})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': '请输入查询的术语。'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
