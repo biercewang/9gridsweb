@@ -108,6 +108,7 @@ function addWordToGrid() {
   handleLine();  // 开始处理第一行
 }
 
+//清空后端格子数据
 function clearAll() {
   fetch('/api/clear_temporary_grids', {
     method: 'POST',
@@ -129,7 +130,7 @@ function clearAll() {
   });
 }
 
-// 前端清空格子的函数示例
+// 前端清空格子的函数
 function clearGridsOnFrontend() {
   for (let i = 1; i <= 9; i++) { // 假设有9个格子
     const gridElement = document.getElementById(`grid${i}`);
@@ -144,6 +145,7 @@ function clearInputText() {
   document.getElementById('input-text').value = '';  // 清空textarea
 }
 
+//保存格子
 function saveGrids() {
     const title = document.getElementById('title-input').value.trim();
     if (!title) {
@@ -193,7 +195,7 @@ function saveGrids() {
     });
 }
 
-
+//更新表格视图
 function updateRecordTableView(id,title, grids) {
     const tableBody = document.getElementById('record-table').querySelector('tbody');
     const newRow = tableBody.insertRow(-1);  // 在表格末尾插入新行
@@ -212,27 +214,27 @@ function updateRecordTableView(id,title, grids) {
 }
 
 //读取数据库到九宫格
-function promptForIdAndLoadGrid() {
-    // 弹出对话框让用户输入ID
-    const gridId = prompt("请输入要读取的格子的ID:");
+function promptForIdAndLoadGrid(optionalGridId) {
+    let gridId = optionalGridId; // 如果提供了ID，使用它
+    if (!gridId) {
+        // 如果没有提供ID，弹出对话框让用户输入
+        gridId = prompt("请输入要读取的格子的ID:");
+    }
     if (gridId) {
         fetch(`/api/grids/${gridId}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) { throw new Error('Network response was not ok'); }
             return response.json();
         })
         .then(data => {
             // 将数据填充到九宫格中
             for(let i = 1; i <= 9; i++) {
-                const gridContent = data[`grid${i}`];
                 const gridElement = document.getElementById(`grid${i}`);
                 if(gridElement) {
-                    gridElement.textContent = gridContent || '';  // 使用空字符串替代null或undefined
+                    gridElement.textContent = data[`grid${i}`] || '';  // 使用空字符串替代null或undefined
                 }
             }
-            // 可以根据需要更新其他元素，如标题等
+            // 更新其他元素，如标题等
             document.getElementById('title-input').value = data.title || '';
         })
         .catch(error => {
@@ -241,6 +243,7 @@ function promptForIdAndLoadGrid() {
         });
     }
 }
+
 
 //双击编辑格子
 function editGrid(gridNumber) {
@@ -399,3 +402,35 @@ window.onload = function() {
     // 你原有的 onload 代码
     // ...
 };
+
+//分析格子内容
+function analyzeContent(gridNumber) {
+    const content = document.getElementById(`grid${gridNumber}`).textContent.trim();
+    if (!content) {
+        alert("格子为空，无法分析。");
+        return;
+    }
+
+    // 编码标题以确保URL安全
+    const encodedTitle = encodeURIComponent(content);
+    fetch(`/api/check_title/${encodedTitle}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.exists) {
+                promptForIdAndLoadGrid(data.id); 
+                // 如果存在，处理存在的逻辑，比如提示用户或加载内容
+                // alert("这个主题已存在于数据库中。");
+                // 这里可以添加代码来处理或显示现有主题的内容
+            } else {
+                // 如果不存在，提示用户是否创建
+                if (confirm("这个主题不存在。是否创建新主题?")) {
+                    document.getElementById('title-input').value = content; // 将内容填充到主题输入框
+                    clearAll(); // 调用清空格子的函数
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error analyzing content:', error);
+            alert('分析过程中出错。');
+        });
+}

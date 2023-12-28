@@ -36,6 +36,7 @@ def add_preset_data():
 def index():
     return render_template('index.html')
 
+#在首次启动前创建数据库,数据表和空记录
 @app.before_request
 def before_request():
     global first_request_done
@@ -57,15 +58,7 @@ def before_request():
             db.session.commit()
 
         first_request_done = True
-# def before_request():
-#     global first_request_done
-#     if not first_request_done:
-#         # 创建数据库和表
-#         with app.app_context():
-#             db.create_all()
-#         # 添加预设数据
-#         add_preset_data()
-#         first_request_done = True
+
 
 #清空格子数据
 @app.route('/api/clear_temporary_grids', methods=['POST'])
@@ -131,7 +124,7 @@ def add_to_grid():
     return jsonify({'message': 'All grids are filled'}), 400
 
 
-#保存格子
+#保存格子到数据库
 @app.route('/api/grids', methods=['POST'])
 #检查是否重复主题
 def save_grid():
@@ -155,7 +148,7 @@ def save_grid():
         # 如果存在同名记录但用户没有选择覆盖
         return jsonify({'message': 'Record with the same title exists'}), 409
 
-#建立新记录
+#数据库中建立新记录
 def create_new_grid(title, grids):
     new_grid = SavedGrids(
         title=title,
@@ -173,7 +166,7 @@ def create_new_grid(title, grids):
     db.session.commit()
     return jsonify({'message': 'New grid created successfully!', 'id': new_grid.id}), 201
 
-#更新已有记录
+#数据中更新已有记录
 def update_existing_grid(record, grids):
     record.grid1 = grids[0]
     record.grid2 = grids[1]
@@ -191,15 +184,63 @@ def update_existing_grid(record, grids):
 @app.route('/api/check_title/<title>', methods=['GET'])
 def check_title(title):
     existing_record = SavedGrids.query.filter_by(title=title).first()
-    return jsonify({'exists': bool(existing_record)})
+    if existing_record:
+        return jsonify({'exists': True, 'id': existing_record.id})
+    else:
+        return jsonify({'exists': False})
 
 
-#读取格子
+# #读取格子
+# @app.route('/api/grids/<int:id>', methods=['GET'])
+# def get_grid(id):
+#     grid = SavedGrids.query.get(id)
+#     if grid:
+#         # 将grid的数据转换成字典或者其他形式
+#         return jsonify({
+#             'id': grid.id,
+#             'title': grid.title,
+#             'grid1': grid.grid1,
+#             'grid2': grid.grid2,
+#             'grid3': grid.grid3,
+#             'grid4': grid.grid4,
+#             'grid5': grid.grid5,
+#             'grid6': grid.grid6,
+#             'grid7': grid.grid7,
+#             'grid8': grid.grid8,
+#             'grid9': grid.grid9
+#         })
+#     else:
+#         return jsonify({'message': 'Grid not found'}), 404
 @app.route('/api/grids/<int:id>', methods=['GET'])
 def get_grid(id):
     grid = SavedGrids.query.get(id)
     if grid:
-        # 将grid的数据转换成字典或者其他形式
+        # 尝试获取当前的临时用户输入
+        temp_input = TemporaryUserInputs.query.first()  # 这里假设只有一条记录，根据实际情况调整
+        if not temp_input:
+            # 如果没有临时用户输入，则创建一条新记录
+            temp_input = TemporaryUserInputs(session_id='some_session_id')  # 使用实际的会话ID
+            db.session.add(temp_input)
+        
+        # 更新临时数据表中的内容
+        temp_input.grid1 = grid.grid1
+        temp_input.grid2 = grid.grid2
+        temp_input.grid3 = grid.grid3
+        temp_input.grid4 = grid.grid4
+        temp_input.grid5 = grid.grid5
+        temp_input.grid6 = grid.grid6
+        temp_input.grid7 = grid.grid7
+        temp_input.grid8 = grid.grid8
+        temp_input.grid9 = grid.grid9
+
+        # 尝试提交更改
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'message': f'Failed to update temporary grids: {str(e)}'}), 500
+
+        # 返回格子内容
         return jsonify({
             'id': grid.id,
             'title': grid.title,
@@ -215,6 +256,8 @@ def get_grid(id):
         })
     else:
         return jsonify({'message': 'Grid not found'}), 404
+
+
 
 #双击编辑格子
 @app.route('/api/grids/update_grid/<int:gridNumber>', methods=['PUT'])
