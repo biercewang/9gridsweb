@@ -139,6 +139,13 @@ body {
     background-color: #f2f2f2;
 }
 
+/* 设置表格中的文本居中 */
+#record-table td, #record-table th {
+    text-align: center; /* 水平居中 */
+    vertical-align: middle; /* 垂直居中 */
+}
+
+
 /* 操作按钮样式 */
 #record-table-actions {
     text-align: center;  /* 将按钮居中 */

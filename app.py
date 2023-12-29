@@ -199,26 +199,6 @@ def check_title(title):
 
 
 # #读取格子
-# @app.route('/api/grids/<int:id>', methods=['GET'])
-# def get_grid(id):
-#     grid = SavedGrids.query.get(id)
-#     if grid:
-#         # 将grid的数据转换成字典或者其他形式
-#         return jsonify({
-#             'id': grid.id,
-#             'title': grid.title,
-#             'grid1': grid.grid1,
-#             'grid2': grid.grid2,
-#             'grid3': grid.grid3,
-#             'grid4': grid.grid4,
-#             'grid5': grid.grid5,
-#             'grid6': grid.grid6,
-#             'grid7': grid.grid7,
-#             'grid8': grid.grid8,
-#             'grid9': grid.grid9
-#         })
-#     else:
-#         return jsonify({'message': 'Grid not found'}), 404
 @app.route('/api/grids/<int:id>', methods=['GET'])
 def get_grid(id):
     grid = SavedGrids.query.get(id)
@@ -325,17 +305,23 @@ def delete_grid(id):
 def export_record(id):
     record = SavedGrids.query.get_or_404(id)
     md_content = f"# {record.title}\n\n"
-    for i in range(1, 10):
-        grid_content = getattr(record, f'grid{i}')
-        if grid_content:
-            md_content += f"- Grid {i}: {grid_content}\n"
+
+    # 创建3x3的Markdown表格，并设置内容居中
+    md_content += "| ← | ↑ | → |\n"  # 表头
+    md_content += "|:---:|:---:|:---:|\n"  # 分隔行，设置为居中对齐
+
+    # 填充表格内容
+    for i in range(1, 10, 3):
+        grid_contents = [getattr(record, f'grid{j}', '') for j in range(i, i + 3)]
+        md_content += f"| {' | '.join(grid_contents)} |\n"
 
     # 添加引用日期
     if record.save_time:
-        md_content += f"\nSaved at: {record.save_time.strftime('%Y-%m-%d %H:%M')}"
+        md_content += f"\nRef: {record.save_time.strftime('%Y-%m-%d %H:%M')}"
 
     # 返回包含Markdown内容和标题的JSON
     return jsonify(markdown=md_content, title=record.title)
+
 
 #删除指定格子的内容
 @app.route('/api/grids/delete_content/<int:gridNumber>', methods=['DELETE'])
@@ -369,6 +355,7 @@ def perform_query():
             # 清理内容
             content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
             content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+            content = re.sub(r'\n\d+|\n\s+', '\n', content)
 
             return jsonify({'content': content})
         except Exception as e:
