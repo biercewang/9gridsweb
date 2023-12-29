@@ -404,36 +404,6 @@ window.onload = function() {
 };
 
 //分析格子内容
-// function analyzeContent(gridNumber) {
-//     const content = document.getElementById(`grid${gridNumber}`).textContent.trim();
-//     if (!content) {
-//         alert("格子为空，无法分析。");
-//         return;
-//     }
-
-//     // 编码标题以确保URL安全
-//     const encodedTitle = encodeURIComponent(content);
-//     fetch(`/api/check_title/${encodedTitle}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.exists) {
-//                 promptForIdAndLoadGrid(data.id); 
-//                 // 如果存在，处理存在的逻辑，比如提示用户或加载内容
-//                 // alert("这个主题已存在于数据库中。");
-//                 // 这里可以添加代码来处理或显示现有主题的内容
-//             } else {
-//                 // 如果不存在，提示用户是否创建
-//                 if (confirm("这个主题不存在。是否创建新主题?")) {
-//                     document.getElementById('title-input').value = content; // 将内容填充到主题输入框
-//                     clearAll(); // 调用清空格子的函数
-//                 }
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error analyzing content:', error);
-//             alert('分析过程中出错。');
-//         });
-// }
 function analyzeContent(gridNumber) {
     let content = document.getElementById(`grid${gridNumber}`).textContent.trim();
     if (!content) {
@@ -471,6 +441,14 @@ function analyzeContent(gridNumber) {
         });
 }
 
+//显示查询等待窗口
+function showLoadingIndicator() {
+    document.getElementById('loadingIndicator').style.display = 'block';
+}
+//隐藏查询等待窗口
+function hideLoadingIndicator() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+}
 
 
 //执行AI查询,搜索主题
@@ -480,7 +458,7 @@ function performAIQuery() {
         alert("请输入查询的术语。");
         return;
     }
-
+    showLoadingIndicator();  // 显示加载指示器
     fetch('/api/perform_query', {
         method: 'POST',
         headers: {
@@ -490,6 +468,7 @@ function performAIQuery() {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoadingIndicator();  // 隐藏加载指示器
         if(data.error) {
             alert("错误: " + data.error);
         } else if(data.content) {
@@ -498,6 +477,7 @@ function performAIQuery() {
         }
     })
     .catch(error => {
+        hideLoadingIndicator();  // 隐藏加载指示器
         console.error('AI查询过程中出错:', error);
         alert('AI查询过程中出错');
     });
@@ -511,7 +491,7 @@ function organizeInputWithAI() {
         alert("请输入要整理的要点。");
         return;
     }
-
+    showLoadingIndicator();  // 显示加载指示器
     fetch('/api/perform_query', {
         method: 'POST',
         headers: {
@@ -521,6 +501,7 @@ function organizeInputWithAI() {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoadingIndicator();  // 隐藏加载指示器
         if(data.error) {
             alert("错误: " + data.error);
         } else if(data.content) {
@@ -529,6 +510,7 @@ function organizeInputWithAI() {
         }
     })
     .catch(error => {
+        hideLoadingIndicator();  // 隐藏加载指示器
         console.error('AI整理过程中出错:', error);
         alert('AI整理过程中出错');
     });

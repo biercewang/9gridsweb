@@ -224,3 +224,54 @@ body {
 #custom-context-menu {
     user-select: none; /* 禁止选中文本 */
 }
+
+/* AI查询提示 Loading Indicator 全屏遮罩样式 */
+.loading-indicator {
+    display: none; /* 默认隐藏 */
+    position: fixed; /* 固定位置 */
+    top: 50%; /* 居中对齐 */
+    left: 50%; /* 居中对齐 */
+    transform: translate(-50%, -50%); /* 使用变换确保完全居中 */
+    background: white; /* 白色背景 */
+    padding: 20px; /* 内边距 */
+    border-radius: 10px; /* 圆角边框 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 阴影效果 */
+    z-index: 9999; /* 确保在最上层 */
+}
+
+/* Loading 内容样式 */
+.loading-content {
+    text-align: center; /* 文本居中 */
+    display: flex; /* 使用flex布局 */
+    align-items: center; /* 垂直居中内容 */
+    justify-content: center; /* 水平居中内容 */
+}
+
+/* Spinner样式 */
+.spinner {
+    width: 40px; /* 动画宽度 */
+    height: 40px; /* 动画高度 */
+    border: 4px solid rgba(0, 0, 0, 0.1); /* 圆环背景边框 */
+    border-top: 4px solid #3498db; /* 圆环顶部边框 */
+    border-radius: 50%; /* 圆形边框 */
+    animation: spin 2s linear infinite; /* 应用旋转动画 */
+}
+
+/* 旋转关键帧动画 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* 加载文本样式 */
+.loading-content p {
+    margin-left: 10px; /* 与图标的间距 */
+    font-size: 18px; /* 增加字体大小 */
+    color: #333; /* 文本颜色 */
+}
+
+/* 覆盖原来的loading图标样式 */
+.loading-content img {
+    display: none; /* 隐藏静态加载图标 */
+}
