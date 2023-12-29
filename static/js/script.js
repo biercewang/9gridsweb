@@ -404,11 +404,47 @@ window.onload = function() {
 };
 
 //分析格子内容
+// function analyzeContent(gridNumber) {
+//     const content = document.getElementById(`grid${gridNumber}`).textContent.trim();
+//     if (!content) {
+//         alert("格子为空，无法分析。");
+//         return;
+//     }
+
+//     // 编码标题以确保URL安全
+//     const encodedTitle = encodeURIComponent(content);
+//     fetch(`/api/check_title/${encodedTitle}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.exists) {
+//                 promptForIdAndLoadGrid(data.id); 
+//                 // 如果存在，处理存在的逻辑，比如提示用户或加载内容
+//                 // alert("这个主题已存在于数据库中。");
+//                 // 这里可以添加代码来处理或显示现有主题的内容
+//             } else {
+//                 // 如果不存在，提示用户是否创建
+//                 if (confirm("这个主题不存在。是否创建新主题?")) {
+//                     document.getElementById('title-input').value = content; // 将内容填充到主题输入框
+//                     clearAll(); // 调用清空格子的函数
+//                 }
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error analyzing content:', error);
+//             alert('分析过程中出错。');
+//         });
+// }
 function analyzeContent(gridNumber) {
-    const content = document.getElementById(`grid${gridNumber}`).textContent.trim();
+    let content = document.getElementById(`grid${gridNumber}`).textContent.trim();
     if (!content) {
         alert("格子为空，无法分析。");
         return;
+    }
+
+    // 如果内容包含中文冒号，只取冒号前面的部分
+    const colonIndex = content.indexOf('：');
+    if (colonIndex !== -1) {
+        content = content.substring(0, colonIndex).trim();
     }
 
     // 编码标题以确保URL安全
@@ -434,6 +470,8 @@ function analyzeContent(gridNumber) {
             alert('分析过程中出错。');
         });
 }
+
+
 
 //执行AI查询,搜索主题
 function performAIQuery() {
