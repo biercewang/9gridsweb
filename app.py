@@ -24,10 +24,10 @@ def add_preset_data():
     if SavedGrids.query.count() == 0:
         print("Adding preset data...")
         preset_data = [
-            SavedGrids(title="大五人格(示例)", grid1="", grid2="开放性", grid3="",
+            SavedGrids(title="大五人格", grid1="", grid2="开放性", grid3="",
                        grid4="宜人性", grid5="神经质", grid6="外向性", grid7="",
                        grid8="尽责性", grid9=""),
-            SavedGrids(title="波特五力模型(示例)", grid1="", grid2="新进入者", grid3="",
+            SavedGrids(title="波特五力模型", grid1="", grid2="新进入者", grid3="",
                        grid4="供应商", grid5="同行竞争者", grid6="客户", grid7="",
                        grid8="替代品", grid9=""),
             # ... 其他预设数据 ...
