@@ -16,26 +16,61 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
         const tableBody = document.querySelector("#record-table tbody");
-        data.forEach(grid => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${grid.id}</td>
-                <td>${processContent(grid.title)}</td>
-                <td>${processContent(grid.grid1)}</td>
-                <td>${processContent(grid.grid2)}</td>
-                <td>${processContent(grid.grid3)}</td>
-                <td>${processContent(grid.grid4)}</td>
-                <td>${processContent(grid.grid5)}</td>
-                <td>${processContent(grid.grid6)}</td>
-                <td>${processContent(grid.grid7)}</td>
-                <td>${processContent(grid.grid8)}</td>
-                <td>${processContent(grid.grid9)}</td>
-            `;
-            tableBody.appendChild(row);
-        });
+        data.forEach(grid => populateTableRow(tableBody, grid));  // 使用新的函数填充行
     })
     .catch(error => console.error('Error:', error));
 });
+
+// 填充表格行的函数
+function populateTableRow(tableBody, grid) {
+    const row = tableBody.insertRow(-1);
+
+    row.innerHTML = `
+        <td>${grid.id}</td>
+        <td>${processContent(grid.title)}</td>
+        <td>${processContent(grid.grid1)}</td>
+        <td>${processContent(grid.grid2)}</td>
+        <td>${processContent(grid.grid3)}</td>
+        <td>${processContent(grid.grid4)}</td>
+        <td>${processContent(grid.grid5)}</td>
+        <td>${processContent(grid.grid6)}</td>
+        <td>${processContent(grid.grid7)}</td>
+        <td>${processContent(grid.grid8)}</td>
+        <td>${processContent(grid.grid9)}</td>
+    `;
+}
+
+//更新表格视图
+function updateRecordTableView(id, title, grids) {
+    const tableBody = document.getElementById('record-table').querySelector('tbody');
+
+    // 删除表格中与新增条目相同ID的旧行
+    for (let i = 0; i < tableBody.rows.length; i++) {
+        if (tableBody.rows[i].cells[0].textContent == id) {
+            tableBody.deleteRow(i);
+            break;
+        }
+    }
+
+    // 创建一个新对象来代表新行的数据
+    const newGrid = {
+        id: id,
+        title: title,
+        grid1: grids[0],
+        grid2: grids[1],
+        grid3: grids[2],
+        grid4: grids[3],
+        grid5: grids[4],
+        grid6: grids[5],
+        grid7: grids[6],
+        grid8: grids[7],
+        grid9: grids[8]
+    };
+
+    // 使用新的函数填充行
+    populateTableRow(tableBody, newGrid);
+}
+
 
 // 用于处理格子内容的函数,简化为:之前的内容
 function processContent(content) {
@@ -207,23 +242,7 @@ function saveGrids() {
     });
 }
 
-//更新表格视图
-function updateRecordTableView(id,title, grids) {
-    const tableBody = document.getElementById('record-table').querySelector('tbody');
-    const newRow = tableBody.insertRow(-1);  // 在表格末尾插入新行
 
-    // 插入新行的单元格并填充数据
-    let cell = newRow.insertCell(0);  // 插入ID单元格
-    cell.textContent = id;  // 使用从后端获取的真实ID
-
-    cell = newRow.insertCell(1);  // 插入标题单元格
-    cell.textContent = title;
-
-    for (let i = 0; i < grids.length; i++) {
-        cell = newRow.insertCell(i + 2);  // 插入各个格子数据
-        cell.textContent = processContent(grids[i]);  // 使用processContent处理内容
-    }
-}
 
 
 //读取数据库到九宫格
