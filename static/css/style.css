@@ -7,8 +7,19 @@ body {
 }
 
 /* 标题输入区域 */
+/* 输入区域容器样式 */
+#input-container {
+    display: flex; /* 启用Flexbox布局 */
+    justify-content: space-between; /* 两个子元素分布在两端 */
+    align-items: center; /* 垂直居中对齐 */
+    margin-bottom: 20px; /* 保留原有的底部外边距 */
+}
+
+/* 标题输入区域样式 */
 #title-input-area {
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    margin-right: 20px; /* 保持原有的右外边距 */
 }
 
 #title-input-area label {
@@ -17,7 +28,10 @@ body {
 
 #title-input-area input {
     padding: 5px;
-    margin-right: 10px;
+    margin-right: 10px; /* 调整输入框的右侧外边距 */
+    width: 50%; /* 控制文本框的宽度 */
+    max-width: 2000px; /* 或设置一个最大宽度 */
+    flex-grow: 0; /* 停止输入框填充剩余空间 */
 }
 
 #title-input-area button {
@@ -28,31 +42,63 @@ body {
     cursor: pointer;
 }
 
-/* 输入和按钮区域 */
-#input-area {
-    margin-bottom: 20px;
+/* 参考来源区域样式 */
+#reference-input-area {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 200px; /* 新增左边距来增加空间 */
 }
 
-#input-area textarea {
-    width: calc(100% - 50px);
-    padding: 5px;
+#reference-input-area label {
     margin-right: 10px;
 }
 
-#input-area div {
-    text-align: center; /* 将按钮居中 */
-    margin-top: 10px;
+#reference-input-area input {
+    padding: 5px;
+    flex-grow: 1;
+}
+
+
+/* 输入和按钮区域 */
+#input-area {
+    display: flex; /* 启用Flexbox布局 */
+    flex-direction: column; /* 使子元素垂直排列 */
+    align-items: flex-start; /* 左对齐子元素 */
+    margin-bottom: 20px; /* 保持原有的底部外边距 */
+}
+
+.input-label-container {
+    display: flex; /* 启用Flexbox布局 */
+    align-items: center; /* 垂直居中对齐子元素 */
+    width: 100%; /* 确保占满父容器宽度 */
+}
+
+#input-area label {
+    margin-right: 10px; /* 在标签和文本区域之间添加一些右外边距 */
+}
+
+#input-area textarea {
+    flex-grow: 1; /* 文本区域填充剩余空间 */
+    padding: 5px; /* 保持原有的内边距 */
+}
+
+.button-container {
+    display: flex; /* 启用Flexbox布局 */
+    justify-content: center; /* 水平居中按钮 */
+    width: 100%; /* 确保占满父容器宽度 */
 }
 
 #input-area button {
     padding: 5px 15px;
-    margin: 0 10px; /* 为按钮添加水平间距 */
+    margin-top: 10px; /* 为按钮添加顶部外边距 */
     background-color: #28a745;
     color: white;
     border: none;
     cursor: pointer;
-    display: inline-block; /* 确保按钮可以被正确居中 */
+    margin-right: 10px; /* 在按钮之间添加一些右外边距 */
 }
+
 
 /* 加入格子按钮样式 */
 #input-area button:nth-child(1) {

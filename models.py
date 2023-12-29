@@ -16,6 +16,7 @@ class TemporaryUserInputs(db.Model):
     grid7 = db.Column(db.Text)
     grid8 = db.Column(db.Text)
     grid9 = db.Column(db.Text)
+    reference = db.Column(db.Text)  # 新增字段
     last_updated = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
 class SavedGrids(db.Model):
@@ -30,4 +31,5 @@ class SavedGrids(db.Model):
     grid7 = db.Column(db.Text)
     grid8 = db.Column(db.Text)
     grid9 = db.Column(db.Text)
+    reference = db.Column(db.Text)  # 新增字段
     save_time = db.Column(db.DateTime, server_default=db.func.now())

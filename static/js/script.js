@@ -152,6 +152,7 @@ function saveGrids() {
         alert("请输入主题后再保存格子。");
         return; // 如果标题为空，停止执行并提示用户
     }
+    const reference = document.getElementById('reference-input').value.trim(); // 获取参考来源
     const grids = [];
     for (let i = 1; i <= 9; i++) {
         const gridContent = document.getElementById(`grid${i}`).textContent;
@@ -174,7 +175,7 @@ function saveGrids() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({title: title, grids: grids, overwrite: data.exists})
+            body: JSON.stringify({title: title, grids: grids, reference: reference, overwrite: data.exists})
         })
         .then(response => response.json())
         .then(data => {
@@ -236,6 +237,7 @@ function promptForIdAndLoadGrid(optionalGridId) {
             }
             // 更新其他元素，如标题等
             document.getElementById('title-input').value = data.title || '';
+            document.getElementById('reference-input').value = data.reference || ''; // 填充参考来源
         })
         .catch(error => {
             console.error('Error fetching grid:', error);

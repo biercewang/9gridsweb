@@ -9,42 +9,54 @@
 </head>
 <body>
 
-<!-- 标题输入区域 -->
-<div id="title-input-area">
-    <label for="title-input">主题:</label>
-    <input type="text" id="title-input" placeholder="请输入主题">
-    <button onclick="performAIQuery()">AI查询</button>
+<!-- 输入区域容器 -->
+<div id="input-container">
+    <!-- 标题输入区域 -->
+    <div id="title-input-area">
+        <label for="title-input">主题:</label>
+        <input type="text" id="title-input" placeholder="请输入主题">
+        <button onclick="performAIQuery()">查询要点</button>
+    </div>
+
+    <!-- 参考来源区域 -->
+    <div id="reference-input-area">
+        <label for="reference-input">参考来源:</label>
+        <input type="text" id="reference-input" placeholder="请输入参考来源">
+    </div>
 </div>
+
 
 <!-- 输入和按钮区域 -->
 <div id="input-area">
-    <label for="input-text">要点:</label>
-    <textarea id="input-text" rows="6" placeholder="在此输入你的要点，每个要点使用Enter键分行,点击加入格子可分别添加到格子中。"></textarea> <!-- 设置为6行 -->
-    <div>
-        <button onclick="addWordToGrid()">加入格子</button>
-        <button onclick="organizeInputWithAI()">AI整理</button>
+    <div class="input-label-container">
+        <label for="input-text">要点:</label>
+        <textarea id="input-text" rows="5" placeholder="在此输入你的要点，每个要点使用Enter键分行,点击加入格子可分别添加到格子中。"></textarea>
+    </div>
+    <div class="button-container">
+        <button onclick="addWordToGrid()">加入格子↓</button>
+        <button onclick="organizeInputWithAI()">要点整理</button>
         <button onclick="clearInputText()">清除要点</button>
     </div>
 </div>
 
 <!-- 九宫格显示区域 -->
 <div id="grid-container">
-    <div id="grid1" class="grid-item" ondblclick="editGrid(1)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 1)" data-tooltip="双击可修改格子内容,拖动可交换格子位置"></div>
+    <div id="grid1" class="grid-item" ondblclick="editGrid(1)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 1)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
     <div id="grid2" class="grid-item" ondblclick="editGrid(2)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 2)" ></div>
-    <div id="grid3" class="grid-item" ondblclick="editGrid(3)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 3)" data-tooltip="双击可修改格子内容,拖动可交换格子位置"></div>
+    <div id="grid3" class="grid-item" ondblclick="editGrid(3)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 3)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
     <div id="grid4" class="grid-item" ondblclick="editGrid(4)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 4)" ></div>
-    <div id="grid5" class="grid-item" ondblclick="editGrid(5)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 5)" data-tooltip="双击可修改格子内容,拖动可交换格子位置"></div>
+    <div id="grid5" class="grid-item" ondblclick="editGrid(5)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 5)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
     <div id="grid6" class="grid-item" ondblclick="editGrid(6)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 6)" ></div>
-    <div id="grid7" class="grid-item" ondblclick="editGrid(7)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 7)" data-tooltip="双击可修改格子内容,拖动可交换格子位置"></div>
+    <div id="grid7" class="grid-item" ondblclick="editGrid(7)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 7)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
     <div id="grid8" class="grid-item" ondblclick="editGrid(8)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 8)" ></div>
-    <div id="grid9" class="grid-item" ondblclick="editGrid(9)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 9)" data-tooltip="双击可修改格子内容,拖动可交换格子位置"></div>
+    <div id="grid9" class="grid-item" ondblclick="editGrid(9)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 9)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
 
 </div>
 
 <!-- 保存、读取、清除格子和全部清空按钮 -->
 <div id="action-buttons">
-    <button onclick="saveGrids()">保存格子</button>
-    <button onclick="promptForIdAndLoadGrid()">读取格子</button>
+    <button onclick="saveGrids()">保存格子↓</button>
+    <button onclick="promptForIdAndLoadGrid()">读取格子↑</button>
     <button id="clear-all-button" onclick="clearAll()">清除格子</button>
 </div>
 
@@ -74,7 +86,7 @@
 
 <!-- 右键菜单 -->
 <div id="record-table-actions">
-    <button class="export-btn" onclick="promptForIdAndExportRecord()">导出条目</button>
+    <button class="export-btn" onclick="promptForIdAndExportRecord()">导出条目↓</button>
     <button class="delete-btn" onclick="promptForIdAndDeleteRecord()">删除条目</button>
 </div>
 

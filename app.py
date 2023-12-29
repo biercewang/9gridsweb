@@ -139,6 +139,7 @@ def save_grid():
     data = request.json
     title = data.get('title')
     grids = data.get('grids')
+    reference = data.get('reference')  # 从请求中获取参考来源
     overwrite = data.get('overwrite')
 
     if not title.strip():  # 后端对标题是否为空进行检查
@@ -148,16 +149,16 @@ def save_grid():
 
     if existing_record and overwrite:
         # 如果找到同名记录且用户选择覆盖
-        return update_existing_grid(existing_record, grids)
+        return update_existing_grid(existing_record, grids, reference)
     elif not existing_record:
         # 如果没有找到同名记录，创建新记录
-        return create_new_grid(title, grids)
+        return create_new_grid(title, grids, reference)
     else:
         # 如果存在同名记录但用户没有选择覆盖
         return jsonify({'message': 'Record with the same title exists'}), 409
 
 #数据库中建立新记录
-def create_new_grid(title, grids):
+def create_new_grid(title, grids, reference):
     new_grid = SavedGrids(
         title=title,
         grid1=grids[0],
@@ -168,14 +169,15 @@ def create_new_grid(title, grids):
         grid6=grids[5],
         grid7=grids[6],
         grid8=grids[7],
-        grid9=grids[8]
+        grid9=grids[8],
+        reference = reference  # 设置参考来源
     )
     db.session.add(new_grid)
     db.session.commit()
     return jsonify({'message': 'New grid created successfully!', 'id': new_grid.id}), 201
 
 #数据中更新已有记录
-def update_existing_grid(record, grids):
+def update_existing_grid(record, grids, reference):
     record.grid1 = grids[0]
     record.grid2 = grids[1]
     record.grid3 = grids[2]
@@ -185,6 +187,7 @@ def update_existing_grid(record, grids):
     record.grid7 = grids[6]
     record.grid8 = grids[7]
     record.grid9 = grids[8]
+    record.reference = reference
     db.session.commit()
     return jsonify({'message': 'Grid updated successfully', 'id': record.id}), 200
 
@@ -240,7 +243,8 @@ def get_grid(id):
             'grid6': grid.grid6,
             'grid7': grid.grid7,
             'grid8': grid.grid8,
-            'grid9': grid.grid9
+            'grid9': grid.grid9,
+            'reference': grid.reference
         })
     else:
         return jsonify({'message': 'Grid not found'}), 404
@@ -315,9 +319,13 @@ def export_record(id):
         grid_contents = [getattr(record, f'grid{j}', '') for j in range(i, i + 3)]
         md_content += f"| {' | '.join(grid_contents)} |\n"
 
+    # 添加参考来源
+    if record.reference:
+        md_content += f"\n\n\n### Ref:  {record.reference}"
+
     # 添加引用日期
     if record.save_time:
-        md_content += f"\nRef: {record.save_time.strftime('%Y-%m-%d %H:%M')}"
+        md_content += f" {record.save_time.strftime('%Y%m%d%H%M')}"
 
     # 返回包含Markdown内容和标题的JSON
     return jsonify(markdown=md_content, title=record.title)
