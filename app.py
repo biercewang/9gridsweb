@@ -1,4 +1,7 @@
 #app.py
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, render_template, request, jsonify, send_file, make_response
 from config import DevelopmentConfig
 from database import db, init_db

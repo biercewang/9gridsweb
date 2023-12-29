@@ -5,6 +5,7 @@ import os
 import sys
 import re
 
+
 class APIHandler:
     def __init__(self):
         self.api_key = os.getenv('API_KEY')  # 从环境变量读取API密钥
