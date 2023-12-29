@@ -435,6 +435,7 @@ function analyzeContent(gridNumber) {
         });
 }
 
+//执行AI查询,搜索主题
 function performAIQuery() {
     const term = document.getElementById('title-input').value.trim();
     if (!term) {
@@ -461,5 +462,36 @@ function performAIQuery() {
     .catch(error => {
         console.error('AI查询过程中出错:', error);
         alert('AI查询过程中出错');
+    });
+}
+
+//执行AI查询,整理要点
+function organizeInputWithAI() {
+    // 从要点文本框中获取文本而不是主题框
+    const inputText = document.getElementById('input-text').value.trim();
+    if (!inputText) {
+        alert("请输入要整理的要点。");
+        return;
+    }
+
+    fetch('/api/perform_query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ term: inputText })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.error) {
+            alert("错误: " + data.error);
+        } else if(data.content) {
+            // 使用返回的内容更新要点文本框
+            document.getElementById('input-text').value = data.content;
+        }
+    })
+    .catch(error => {
+        console.error('AI整理过程中出错:', error);
+        alert('AI整理过程中出错');
     });
 }

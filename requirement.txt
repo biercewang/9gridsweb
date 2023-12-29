@@ -2,3 +2,4 @@ flask_sqlalchemy
 Flask
 markdown
 gunicorn
+python-dotenv

@@ -355,6 +355,7 @@ def delete_grid_content(gridNumber):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
+#AI查询
 @app.route('/api/perform_query', methods=['POST'])
 def perform_query():
     term = request.json.get('term', '').strip()
