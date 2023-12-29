@@ -38,6 +38,11 @@ function populateTableRow(tableBody, grid) {
         <td>${processContent(grid.grid8)}</td>
         <td>${processContent(grid.grid9)}</td>
     `;
+    // 添加双击事件监听器
+    row.addEventListener('dblclick', () => {
+        const gridId = row.cells[0].textContent;  // 获取行的第一个单元格的内容，即ID
+        promptForIdAndLoadGrid(gridId);  // 调用读取函数并传入ID
+    });
 }
 
 //更新表格视图
