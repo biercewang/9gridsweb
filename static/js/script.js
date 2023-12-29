@@ -20,22 +20,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${grid.id}</td>
-                <td>${grid.title}</td>
-                <td>${grid.grid1}</td>
-                <td>${grid.grid2}</td>
-                <td>${grid.grid3}</td>
-                <td>${grid.grid4}</td>
-                <td>${grid.grid5}</td>
-                <td>${grid.grid6}</td>
-                <td>${grid.grid7}</td>
-                <td>${grid.grid8}</td>
-                <td>${grid.grid9}</td>
+                <td>${processContent(grid.title)}</td>
+                <td>${processContent(grid.grid1)}</td>
+                <td>${processContent(grid.grid2)}</td>
+                <td>${processContent(grid.grid3)}</td>
+                <td>${processContent(grid.grid4)}</td>
+                <td>${processContent(grid.grid5)}</td>
+                <td>${processContent(grid.grid6)}</td>
+                <td>${processContent(grid.grid7)}</td>
+                <td>${processContent(grid.grid8)}</td>
+                <td>${processContent(grid.grid9)}</td>
             `;
             tableBody.appendChild(row);
         });
     })
     .catch(error => console.error('Error:', error));
 });
+
+// 用于处理格子内容的函数,简化为:之前的内容
+function processContent(content) {
+    // 通过查找“：”和提取之前的内容来简化数据
+    const index = content.indexOf('：');
+    if (index !== -1) {
+        return content.substring(0, index);
+    }
+    return content;  // 如果没有找到“：”，则返回原始内容
+}
+
 
 let currentGridNumber; // 当前右键点击的格子编号
 
@@ -210,9 +221,10 @@ function updateRecordTableView(id,title, grids) {
 
     for (let i = 0; i < grids.length; i++) {
         cell = newRow.insertCell(i + 2);  // 插入各个格子数据
-        cell.textContent = grids[i];
+        cell.textContent = processContent(grids[i]);  // 使用processContent处理内容
     }
 }
+
 
 //读取数据库到九宫格
 function promptForIdAndLoadGrid(optionalGridId) {
@@ -401,8 +413,6 @@ window.onload = function() {
     })
     .catch(error => console.error('Error clearing temporary grids:', error));
 
-    // 你原有的 onload 代码
-    // ...
 };
 
 //分析格子内容
