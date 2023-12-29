@@ -30,7 +30,7 @@ body {
     padding: 5px;
     margin-right: 10px; /* 调整输入框的右侧外边距 */
     width: 50%; /* 控制文本框的宽度 */
-    max-width: 2000px; /* 或设置一个最大宽度 */
+    max-width: 1000px; /* 或设置一个最大宽度 */
     flex-grow: 0; /* 停止输入框填充剩余空间 */
 }
 
@@ -47,7 +47,7 @@ body {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    margin-left: 200px; /* 新增左边距来增加空间 */
+    margin-left: 50px; /* 新增左边距来增加空间 */
 }
 
 #reference-input-area label {
