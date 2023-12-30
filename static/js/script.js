@@ -551,3 +551,37 @@ function organizeInputWithAI() {
         alert('AI整理过程中出错');
     });
 }
+
+// 标记学习模式是否激活
+let isStudyModeOn = false;
+
+function toggleStudyMode() {
+    isStudyModeOn = !isStudyModeOn;  // 切换状态
+
+    const button = document.getElementById('studyModeButton');  // 获取按钮
+    const gridItems = document.querySelectorAll('.grid-item');  // 获取所有格子
+
+    if (isStudyModeOn) {
+        // 激活学习模式
+        button.textContent = '浏览模式';  // 更新按钮文本
+        button.style.backgroundColor = '#6c757d';  // 设置为灰色
+        gridItems.forEach(item => {
+            if (item.textContent.trim() !== '') {
+                item.style.backgroundColor = 'grey';  // 设置背景色为灰色
+                item.dataset.originalContent = item.textContent;  // 保存原始内容
+                item.textContent = '';  // 隐藏内容
+            }
+        });
+    } else {
+        // 关闭学习模式
+        button.textContent = '学习模式';  // 更新按钮文本
+        button.style.backgroundColor = '#ffc107';  // 设置为黄色
+        gridItems.forEach(item => {
+            if (item.dataset.originalContent) {
+                item.style.backgroundColor = '';  // 恢复原始背景色
+                item.textContent = item.dataset.originalContent;  // 恢复内容
+                delete item.dataset.originalContent;  // 删除保存的原始内容
+            }
+        });
+    }
+}
