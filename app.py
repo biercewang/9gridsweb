@@ -363,7 +363,7 @@ def perform_query():
             # 清理内容
             content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
             content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
-            content = re.sub(r'\n\d+|\n\s+', '\n', content)
+            content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    
 
             return jsonify({'content': content})
         except Exception as e:
