@@ -1,37 +1,37 @@
 # api_handler.py
 import zhipuai
-import json
 import os
-
-
+from flask import jsonify
+import re
+import openai
 
 class APIHandler:
     def __init__(self):
-        self.api_key = os.getenv('API_KEY')  # 从环境变量读取API密钥
-        if self.api_key:
-            zhipuai.api_key = self.api_key  # 设定智谱AI的API密钥
+        zhipuai.api_key = os.getenv('ZHIPU_APIKEY')   # 设定智谱AI的API密钥
+        openai.api_key = os.getenv("OPENAI_APIKEY")
 
         # 定义模板字典
         self.templates = {
             'default': """
-                你是一位知识图谱的高手,精通各个专业领域.我会给你提供的主题词,或者一段描述.
+                你是一位博学家 知识图谱专家,精通各个专业领域.我会给你提供的主题词.
                 如果是一个主题词,请你把这个主题词拓展为为3-5个要点,最多不超过9个.
-                如果是一段描述,请你把这段描述精炼为3-5个要点,最多不超过9个.
                 
                 比如在营销中常常提到的4P原则,当我说:
                 "营销4P原则"
 
                 你会直接按照以下格式回复我:
 
-                价格:你对价格的详细描述
-                产品:你对产品的详细描述
-                渠道:你对渠道的详细描述
-                营销:你对营销的详细描述
+                价格：你对价格的详细描述
+                产品：你对产品的详细描述
+                渠道：你对渠道的详细描述
+                营销：你对营销的详细描述
 
                 请直接从要点的第一项开始,不要重复我提出的问题,也不要在开头进行说明.
                 每个要点说完要换行,换行时请使用两个换行符,而不是一个
                 请不要在每一点的前面增加序号如1. 2.
                 不需要进行总结
+                请不要在"："前写任何英文对照或翻译,如果写请写在"："之后
+                每一个要点请先使用专业并广泛接受的定义解释.再使用比较通俗的语言解释.
 
                 接下来要我说的一个主题词或者一段描述是:
                 "{term}"
@@ -45,10 +45,10 @@ class APIHandler:
                 请100%完全保留原有的说法,不要缩写或者改写
                 请按照以下格式输出,
                 比如:
-                XX:对XX的原文描述
-                XX:对XX的原文描述
-                XX:对XX的原文描述
-                XX:对XX的原文描述
+                XX：对XX的原文描述
+                XX：对XX的原文描述
+                XX：对XX的原文描述
+                XX：对XX的原文描述
                 ....
 
                 请直接从要点的第一项开始,不要重复我提出的问题,也不要在开头进行说明.
@@ -62,8 +62,8 @@ class APIHandler:
             # 可以在这里添加更多模板
         }
 
-    def fetch_data(self, term, prompt_type='default'):
-        print("Prompt type received:", prompt_type)  # 调试输出
+    def fetch_data_zhipu(self, term, prompt_type='default'):
+        print("Prompt type received:", prompt_type)  # 监测使用的模板
         prompt_template = self.templates.get(prompt_type) or self.templates['default']
         prompt = prompt_template.format(term=term)
         try:
@@ -74,8 +74,43 @@ class APIHandler:
                 temperature=0.95,
             )
             # 处理并返回响应数据
-            print(response)
-            return response
+            print(response)  #监测返回值是否准确
+
+            # 提取内容
+            content = response.get('data', {}).get('choices', [{}])[0].get('content', '')
+
+            #清理格式
+            content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+            content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+            content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    #清除序号
+
+            return jsonify({'content': content})  #返回json格式的文本
+        
         except Exception as e:
             raise e  # 抛出异常以供上层处理
+        
+    def fetch_data_openai(self, term, prompt_type='default'):
+        print("Prompt type received:", prompt_type)  # 监测使用的模板
+        prompt_template = self.templates.get(prompt_type) or self.templates['default']
+        prompt = prompt_template.format(term=term)
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-4-1106-preview",
+                messages=[{"role": "user", "content": prompt.format(term=term)}]
+            )
+
+            # 处理并返回响应数据
+            print(response)  #监测返回值是否准确
+            
+            # 提取内容
+            content = response.get('choices', [{}])[0].get('message', {}).get('content', '')
+
+            #清理格式
+            content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+            content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+            content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    #清除序号
+
+            return jsonify({'content': content})
+        except Exception as e:
+            raise e
 

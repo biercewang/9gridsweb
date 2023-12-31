@@ -357,24 +357,16 @@ def delete_grid_content(gridNumber):
 @app.route('/api/perform_query', methods=['POST'])
 def perform_query():
 
-    data = request.json
-    term = data.get('term', '').strip()
-    prompt_type = data.get('prompt_type', 'default')  # 默认使用'default'模板
+    data = request.json  #从前端收到json格式的内容和模板要求
+    term = data.get('term', '').strip() #获取其中的内容
+    prompt_type = data.get('prompt_type', 'default')  # 获取其中的模板,默认使用'default'模板
 
     if term:
         api_handler = APIHandler()  # 创建APIHandler实例
         try:
-            response = api_handler.fetch_data(term, prompt_type) #修改增加prompt type
+            response = api_handler.fetch_data_openai(term, prompt_type) #构建查询,输入内容和模板两个参数
+            return response
             
-            # 提取内容
-            content = response.get('data', {}).get('choices', [{}])[0].get('content', '')
-
-            # 清理内容
-            content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
-            content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
-            content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    
-
-            return jsonify({'content': content})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     else:
