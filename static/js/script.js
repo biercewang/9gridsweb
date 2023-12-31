@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error('Error:', error));
 });
 
+//表格内容
+// 用于截断文本并添加省略号的函数
+function truncateText(text) {
+    const ellipsis = '...';
+    if (text.length > 20) {
+        return text.substring(0, 20 - ellipsis.length) + ellipsis;
+    }
+    return text;
+}
+
 // 填充表格行的函数
 function populateTableRow(tableBody, grid) {
     const row = tableBody.insertRow(-1);
@@ -28,15 +38,15 @@ function populateTableRow(tableBody, grid) {
     row.innerHTML = `
         <td>${grid.id}</td>
         <td>${processContent(grid.title)}</td>
-        <td>${processContent(grid.grid1)}</td>
-        <td>${processContent(grid.grid2)}</td>
-        <td>${processContent(grid.grid3)}</td>
-        <td>${processContent(grid.grid4)}</td>
-        <td>${processContent(grid.grid5)}</td>
-        <td>${processContent(grid.grid6)}</td>
-        <td>${processContent(grid.grid7)}</td>
-        <td>${processContent(grid.grid8)}</td>
-        <td>${processContent(grid.grid9)}</td>
+        <td>${truncateText(processContent(grid.grid1))}</td>
+        <td>${truncateText(processContent(grid.grid2))}</td>
+        <td>${truncateText(processContent(grid.grid3))}</td>
+        <td>${truncateText(processContent(grid.grid4))}</td>
+        <td>${truncateText(processContent(grid.grid5))}</td>
+        <td>${truncateText(processContent(grid.grid6))}</td>
+        <td>${truncateText(processContent(grid.grid7))}</td>
+        <td>${truncateText(processContent(grid.grid8))}</td>
+        <td>${truncateText(processContent(grid.grid9))}</td>
     `;
     // 添加双击事件监听器
     row.addEventListener('dblclick', () => {
@@ -540,17 +550,31 @@ function performAIQuery() {
 function organizeInputWithAI() {
     // 从要点文本框中获取文本而不是主题框
     const inputText = document.getElementById('input-text').value.trim();
+
+    //
+    const promptType = "organize"
+
+
     if (!inputText) {
         alert("请输入要整理的要点。");
         return;
     }
     showLoadingIndicator();  // 显示加载指示器
+
+    // 设置请求体包括术语和模板类型
+    const requestBody = {
+        term: inputText,
+        prompt_type: promptType
+    };
+
+
     fetch('/api/perform_query', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ term: inputText })
+        // body: JSON.stringify({ term: inputText })
+        body: JSON.stringify(requestBody) // 修改这里
     })
     .then(response => response.json())
     .then(data => {

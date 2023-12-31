@@ -353,14 +353,19 @@ def delete_grid_content(gridNumber):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-#AI查询
+#AI查询统一路由
 @app.route('/api/perform_query', methods=['POST'])
 def perform_query():
-    term = request.json.get('term', '').strip()
+
+    data = request.json
+    term = data.get('term', '').strip()
+    prompt_type = data.get('prompt_type', 'default')  # 默认使用'default'模板
+
     if term:
         api_handler = APIHandler()  # 创建APIHandler实例
         try:
-            response = api_handler.fetch_data(term)
+            response = api_handler.fetch_data(term, prompt_type) #修改增加prompt type
+            
             # 提取内容
             content = response.get('data', {}).get('choices', [{}])[0].get('content', '')
 
@@ -375,6 +380,8 @@ def perform_query():
     else:
         return jsonify({'error': '请输入查询的术语。'}), 400
 
+
+#做数据库中查询输入的主题词
 @app.route('/api/query_titles/<term>', methods=['GET'])
 def query_titles(term):
     # 模糊匹配查询

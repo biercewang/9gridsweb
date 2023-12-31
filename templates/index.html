@@ -15,8 +15,8 @@
     <div id="title-input-area">
         <label for="title-input">主题→</label>
         <input type="text" id="title-input" placeholder="请输入主题，如“大五人格”">
-        <button onclick="queryDatabase()">查询主题</button>
-        <button onclick="performAIQuery()">AI 查询↓</button>
+        <button class="query-database-button" onclick="queryDatabase()">查询主题↓</button>
+        <button class="ai-query-button" onclick="performAIQuery()">AI 查询</button>
     </div>
 
     <!-- 查询结果模态框 -->
@@ -44,22 +44,22 @@
     </div>
     <div class="button-container">
         <button onclick="addWordToGrid()">加入格子↓</button>
-        <button onclick="organizeInputWithAI()">AI 整理↑</button>
+        <button onclick="organizeInputWithAI()">AI 整理</button>
         <button onclick="clearInputText()">清除要点✕</button>
     </div>
 </div>
 
 <!-- 九宫格显示区域 -->
 <div id="grid-container">
-    <div id="grid1" class="grid-item" ondblclick="handleDoubleClick(1)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 1)" data-tooltip="格子1→双击可修改内容,拖动可交换位置,右键可进行分析"></div>
-    <div id="grid2" class="grid-item" ondblclick="handleDoubleClick(2)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 2)" data-tooltip="格子2→双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
-    <div id="grid3" class="grid-item" ondblclick="handleDoubleClick(3)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 3)" data-tooltip="格子3→双击可修改内容,拖动可交换位置,右键可进行分析"></div>
-    <div id="grid4" class="grid-item" ondblclick="handleDoubleClick(4)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 4)" data-tooltip="格子4→双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
-    <div id="grid5" class="grid-item" ondblclick="handleDoubleClick(5)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 5)" data-tooltip="格子5→双击可修改内容,拖动可交换位置,右键可进行分析"></div>
-    <div id="grid6" class="grid-item" ondblclick="handleDoubleClick(6)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 6)" data-tooltip="格子6→双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
-    <div id="grid7" class="grid-item" ondblclick="handleDoubleClick(7)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 7)" data-tooltip="格子7→双击可修改内容,拖动可交换位置,右键可进行分析"></div>
-    <div id="grid8" class="grid-item" ondblclick="handleDoubleClick(8)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 8)" data-tooltip="格子8→双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
-    <div id="grid9" class="grid-item" ondblclick="handleDoubleClick(9)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 9)" data-tooltip="格子9→双击可修改内容,拖动可交换位置,右键可进行分析"></div>
+    <div id="grid1" class="grid-item" ondblclick="handleDoubleClick(1)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 1)" ></div>
+    <div id="grid2" class="grid-item" ondblclick="handleDoubleClick(2)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 2)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
+    <div id="grid3" class="grid-item" ondblclick="handleDoubleClick(3)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 3)" ></div>
+    <div id="grid4" class="grid-item" ondblclick="handleDoubleClick(4)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 4)"  ></div>
+    <div id="grid5" class="grid-item" ondblclick="handleDoubleClick(5)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 5)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析"></div>
+    <div id="grid6" class="grid-item" ondblclick="handleDoubleClick(6)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 6)" " ></div>
+    <div id="grid7" class="grid-item" ondblclick="handleDoubleClick(7)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 7)" ></div>
+    <div id="grid8" class="grid-item" ondblclick="handleDoubleClick(8)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 8)" data-tooltip="双击可修改内容,拖动可交换位置,右键可进行分析" ></div>
+    <div id="grid9" class="grid-item" ondblclick="handleDoubleClick(9)" draggable="true" ondragstart="dragStart(event)" ondragover="allowDrop(event)" ondrop="drop(event, 9)" ></div>
 
 </div>
 
@@ -87,6 +87,7 @@
                 <th>左下</th>
                 <th>下</th>
                 <th>右下</th>
+                <th class="scrollbar-gap"></th> <!-- 新增的空列 -->
             </tr>
         </thead>
         <tbody>

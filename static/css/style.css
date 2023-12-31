@@ -26,12 +26,13 @@ body {
 
 #title-input-area label {
     white-space: nowrap;  /* 防止文本换行 */
-    margin-right: 20px; /* 保持右侧外边距 */
+    margin-right: 10px; /* 保持右侧外边距 */
     flex-shrink: 0; /* 防止标签在空间不足时缩小 */
 }
 
 #title-input-area input {
     padding: 5px;
+    margin-left:0px; 
     margin-right: 10px; /* 调整输入框的右侧外边距 */
     width: 50%; /* 控制文本框的宽度 */
     min-width: 250px; 
@@ -43,12 +44,20 @@ body {
     min-width: 100px;  /* 或更大，根据需要调整 */
     white-space: nowrap;  /* 防止文本换行 */
     padding: 5px 15px;
-    background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
     margin-right: 10px;  /* 在按钮之间添加一些右外边距 */
 }
+
+#title-input-area .query-database-button {
+    background-color: #28a745; /* 绿色 */
+}
+
+#title-input-area .ai-query-button {
+    background-color: #007bff; /* 黄色 */
+}
+
 
 .modal {
     display: none; /* 默认隐藏模态框 */
@@ -137,7 +146,8 @@ body {
 #input-area button {
     font-family: 'Noto Sans SC', sans-serif; /* 使用'Noto Sans SC'，如果无法加载则回退到系统默认的无衬线字体 */
     padding: 5px 15px;
-    margin-top: 10px; /* 为按钮添加顶部外边距 */
+    min-width: 100px;  /* 或更大，根据需要调整 */
+    margin-top: 20px; /* 为按钮添加顶部外边距 */
     background-color: #28a745;
     color: white;
     border: none;
@@ -190,11 +200,13 @@ body {
 /* Action buttons styling */
 #action-buttons {
     text-align: center;
-    margin-top: 30px; /* Increased top margin */
+    margin-top: 20px; /* Increased top margin */
+    margin-bottom: 20px; /* Increased top margin */
 }
 
 #action-buttons button {
     padding: 5px 15px;
+    min-width: 100px;  /* 或更大，根据需要调整 */
     margin: 0 10px; /* Horizontal spacing for buttons */
     border: none;
     cursor: pointer;
@@ -223,19 +235,71 @@ body {
 }
 
 /* 表格视图 */
+
 #record-table-container {
-    margin-top: 20px;
+    width: 100%; /* 根据需要调整宽度 */
+    border-collapse: collapse; /* 折叠边框 */
 }
 
 #record-table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 100%; /* 使表格填满容器 */
 }
 
+
+/* 在表头最右侧添加一个空列以补偿滚动条宽度 */
+.scrollbar-gap {
+    width: 8px;  /* 大概是滚动条的宽度，可能需要根据实际情况进行调整 */
+    border: none; /* 隐藏边框 */
+    background-color: #f2f2f2; /* 与表头背景相同 */
+}
+
+/* 当你有固定的表头时，调整表头的右边距以补偿滚动条的宽度 */
+thead th {
+    padding-right: 8px; /* 调整为实际滚动条宽度的估计值 */
+}
+
+/* 确保表头单元格和表体单元格在有滚动条时能够对齐 */
+th, td {
+    box-sizing: border-box; /* 包括内边距和边框在内的总宽度 */
+    min-width: 120px; /* 或其他适当的宽度 */
+}
+
+
+thead th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+
+tbody {
+    display: block; /* 使<tbody>像块级元素一样布局 */
+    max-height: 500px; /* 表体的最大高度，超出部分将可滚动 */
+    overflow-y: auto; /* 添加垂直滚动条 */
+}
+
+th, td {
+    padding: 8px; /* 单元格内边距 */
+    border: 1px solid #ddd; /* 单元格边框 */
+    text-align: left; /* 文本对齐方式 */
+    min-width: 120px; /* 设置最小宽度以确保列不会变得太窄 */
+}
+
+tr {
+    display: table; /* 使<tr>像表格一样布局 */
+    width: 100%; /* 占满整个表格容器的宽度 */
+    table-layout: fixed; /* 固定布局 */
+}
+
+
 #record-table th, #record-table td {
-    text-align: left;
+    text-align: center; /* 水平居中 */
+    vertical-align: middle; /* 垂直居中 */
     padding: 8px;
     border: 1px solid #ddd;
+    min-width: 120px; /* 或其他适当的宽度 */
+    box-sizing: border-box; /* 确保内边距和边框包含在宽度内 */
 }
 
 #record-table th {
