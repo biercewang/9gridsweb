@@ -552,9 +552,11 @@ function organizeInputWithAI() {
     });
 }
 
-// 标记学习模式是否激活
+//学习模式相关内容
+// 1.标记学习模式是否激活
 let isStudyModeOn = false;
 
+//2.学习模式状态
 function toggleStudyMode() {
     isStudyModeOn = !isStudyModeOn;  // 切换状态
 
@@ -584,4 +586,54 @@ function toggleStudyMode() {
             }
         });
     }
+}
+
+
+//在主题框中查询数据库中的内容
+//1.查询数据库
+function queryDatabase() {
+    const term = document.getElementById('title-input').value.trim();
+    if (!term) {
+        alert("请输入要查询的主题。");
+        return;
+    }
+    
+    // 发送查询请求到后端
+    fetch(`/api/query_titles/${encodeURIComponent(term)}`)
+    .then(response => response.json())
+    .then(data => {
+        if(data.error) {
+            alert("查询出错: " + data.error);
+        } else {
+            // 显示查询结果模态框
+            displayQueryResults(data.results);
+        }
+    })
+    .catch(error => {
+        console.error('查询数据库过程中出错:', error);
+        alert('查询数据库过程中出错');
+    });
+}
+
+//2.在框中展示搜索结果
+function displayQueryResults(results) {
+    // 获取结果列表元素
+    const resultList = document.getElementById('query-result-list');
+    resultList.innerHTML = ''; // 清空旧结果
+
+    // 填充新结果
+    results.forEach(result => {
+        const li = document.createElement('li');
+        li.textContent = result.title;
+        li.onclick = function() { promptForIdAndLoadGrid(result.id); }; // 点击时调用读取逻辑
+        resultList.appendChild(li);
+    });
+
+    // 显示模态框
+    document.getElementById('query-result-modal').style.display = 'block';
+}
+
+// 关闭模态框
+document.getElementsByClassName("close")[0].onclick = function() {
+    document.getElementById('query-result-modal').style.display = "none";
 }

@@ -310,14 +310,18 @@ def export_record(id):
     record = SavedGrids.query.get_or_404(id)
     md_content = f"# {record.title}\n\n"
 
-    # 创建3x3的Markdown表格，并设置内容居中
-    md_content += "| ← | ↑ | → |\n"  # 表头
-    md_content += "|:---:|:---:|:---:|\n"  # 分隔行，设置为居中对齐
+    # 创建带有空白列的3x3的Markdown表格，并设置内容居中
+    md_content += "|   |↑|↑|↑|     |\n"  # 表头
+    md_content += "|:---:|:---:|:---:|:---:|:---:|\n"  # 分隔行，设置为居中对齐
+
 
     # 填充表格内容
     for i in range(1, 10, 3):
-        grid_contents = [getattr(record, f'grid{j}', '') for j in range(i, i + 3)]
-        md_content += f"| {' | '.join(grid_contents)} |\n"
+        grid_contents =  [getattr(record, f'grid{j}', '') for j in range(i, i + 3)]
+        md_content += f"|←| {' | '.join(grid_contents)} |→|\n"
+
+    md_content += "|     |↓|↓|↓|     |\n"
+
 
     # 添加参考来源
     if record.reference:
@@ -370,6 +374,13 @@ def perform_query():
             return jsonify({'error': str(e)}), 500
     else:
         return jsonify({'error': '请输入查询的术语。'}), 400
+
+@app.route('/api/query_titles/<term>', methods=['GET'])
+def query_titles(term):
+    # 模糊匹配查询
+    results = SavedGrids.query.filter(SavedGrids.title.like(f'%{term}%')).all()
+    return jsonify(results=[{'id': result.id, 'title': result.title} for result in results])
+
 
 if __name__ == '__main__':
     app.run(debug=True)

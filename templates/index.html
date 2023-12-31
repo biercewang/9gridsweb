@@ -15,14 +15,24 @@
     <!-- 标题输入区域 -->
     <div id="title-input-area">
         <label for="title-input">主题→</label>
-        <input type="text" id="title-input" placeholder="请输入主题">
-        <button onclick="performAIQuery()">查询要点↓</button>
+        <input type="text" id="title-input" placeholder="请输入主题，如“大五人格”">
+        <button onclick="queryDatabase()">查询主题</button>
+        <button onclick="performAIQuery()">AI 查询↓</button>
+    </div>
+
+    <!-- 查询结果模态框 -->
+    <div id="query-result-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>查询结果</h2>
+            <ul id="query-result-list"></ul>
+        </div>
     </div>
 
     <!-- 参考来源区域 -->
     <div id="reference-input-area">
         <label for="reference-input">参考来源:</label>
-        <input type="text" id="reference-input" placeholder="请输入参考来源">
+        <input type="text" id="reference-input" placeholder="请输入参考来源，如：阳志平《聪明的阅读者》P200 ">
     </div>
 </div>
 
@@ -35,7 +45,7 @@
     </div>
     <div class="button-container">
         <button onclick="addWordToGrid()">加入格子↓</button>
-        <button onclick="organizeInputWithAI()">整理要点↑</button>
+        <button onclick="organizeInputWithAI()">AI 整理↑</button>
         <button onclick="clearInputText()">清除要点✕</button>
     </div>
 </div>

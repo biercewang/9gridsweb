@@ -26,7 +26,7 @@ body {
 
 #title-input-area label {
     white-space: nowrap;  /* 防止文本换行 */
-    margin-right: 10px; /* 保持右侧外边距 */
+    margin-right: 20px; /* 保持右侧外边距 */
     flex-shrink: 0; /* 防止标签在空间不足时缩小 */
 }
 
@@ -34,7 +34,8 @@ body {
     padding: 5px;
     margin-right: 10px; /* 调整输入框的右侧外边距 */
     width: 50%; /* 控制文本框的宽度 */
-    max-width: 1000px; /* 或设置一个最大宽度 */
+    min-width: 250px; 
+    max-width: 1500px; /* 或设置一个最大宽度 */
     flex-grow: 0; /* 停止输入框填充剩余空间 */
 }
 
@@ -46,7 +47,45 @@ body {
     color: white;
     border: none;
     cursor: pointer;
+    margin-right: 10px;  /* 在按钮之间添加一些右外边距 */
 }
+
+.modal {
+    display: none; /* 默认隐藏模态框 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 
 /* 参考来源区域样式 */
 #reference-input-area {
@@ -127,25 +166,27 @@ body {
 /* 九宫格显示区域 */
 #grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 30px; /* 增加底部外边距 */
-    max-width: 600px;
-    margin: auto;
+    grid-template-columns: repeat(3, minmax(364px, auto)); /* 设置每列的最小宽度 */
+    justify-content: center; /* 水平居中 */
+    gap: 10px; /* 格子之间的间隔 */
+    margin: auto; /* 自动外边距确保水平居中 */
 }
 
 .grid-item {
     border: 2px solid #ddd; /* 给格子添加边框 */
-    height: 150px; /* 设置格子的高度 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; /* 使用flex布局 */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
     background-color: #fff; /* 设置格子的背景色 */
-    transition: background-color 0.3s;  
+    padding: 10px; /* 添加一些内边距 */
+    min-height: 225px; /* 设置最小高度为225px */
+    width: 364px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
+    word-wrap: break-word; /* 允许长单词或URL换行到下一行 */
+    font-size: 120%; /* 增加字体大小 */
 }
 
-/* 保存、读取、清除格子按钮 */
 
+/* 保存、读取、清除格子按钮 */
 /* Action buttons styling */
 #action-buttons {
     text-align: center;
