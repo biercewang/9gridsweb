@@ -274,6 +274,12 @@ function promptForIdAndLoadGrid(optionalGridId) {
             // 更新其他元素，如标题等
             document.getElementById('title-input').value = data.title || '';
             document.getElementById('reference-input').value = data.reference || ''; // 填充参考来源
+
+            // 如果学习模式已激活，先取消学习模式,再应用学习模式
+            if (isStudyModeOn) {
+                clearStudyMode()
+                applyStudyMode();  
+            }
         })
         .catch(error => {
             console.error('Error fetching grid:', error);
@@ -556,37 +562,79 @@ function organizeInputWithAI() {
 // 1.标记学习模式是否激活
 let isStudyModeOn = false;
 
-//2.学习模式状态
+// 2.激活学习模式的设置
+function applyStudyMode() {
+    //修改格子样式
+    const gridItems = document.querySelectorAll('.grid-item');
+    gridItems.forEach(item => {
+        if (item.textContent.trim() !== '') {
+            item.style.backgroundColor = 'grey'; // 设置背景色为灰色
+            item.style.color = 'grey'; // 设置字体颜色为灰色，使内容“不可见”
+        }
+    });
+    //修改按钮样式
+    const button = document.getElementById('studyModeButton'); // 获取按钮
+    button.textContent = '浏览模式';
+    button.style.backgroundColor = '#6c757d';
+}
+
+// 3.清除学习模式的设置，恢复正常模式
+function clearStudyMode() {
+    const gridItems = document.querySelectorAll('.grid-item');
+    gridItems.forEach(item => {
+        item.style.backgroundColor = ''; // 恢复原始背景色
+        item.style.color = ''; // 恢复字体颜色
+    });
+
+    const button = document.getElementById('studyModeButton'); // 获取按钮
+    button.textContent = '学习模式';
+    button.style.backgroundColor = '#ffc107';
+}
+
+// 4.切换学习模式
 function toggleStudyMode() {
-    isStudyModeOn = !isStudyModeOn;  // 切换状态
-
-    const button = document.getElementById('studyModeButton');  // 获取按钮
-    const gridItems = document.querySelectorAll('.grid-item');  // 获取所有格子
-
+    isStudyModeOn = !isStudyModeOn; // 切换状态
     if (isStudyModeOn) {
         // 激活学习模式
-        button.textContent = '浏览模式';  // 更新按钮文本
-        button.style.backgroundColor = '#6c757d';  // 设置为灰色
-        gridItems.forEach(item => {
-            if (item.textContent.trim() !== '') {
-                item.style.backgroundColor = 'grey';  // 设置背景色为灰色
-                item.dataset.originalContent = item.textContent;  // 保存原始内容
-                item.textContent = '';  // 隐藏内容
-            }
-        });
+        applyStudyMode();
     } else {
         // 关闭学习模式
-        button.textContent = '学习模式';  // 更新按钮文本
-        button.style.backgroundColor = '#ffc107';  // 设置为黄色
-        gridItems.forEach(item => {
-            if (item.dataset.originalContent) {
-                item.style.backgroundColor = '';  // 恢复原始背景色
-                item.textContent = item.dataset.originalContent;  // 恢复内容
-                delete item.dataset.originalContent;  // 删除保存的原始内容
-            }
-        });
+        clearStudyMode();
     }
 }
+
+
+// //2.学习模式状态
+// function toggleStudyMode() {
+//     isStudyModeOn = !isStudyModeOn;  // 切换状态
+
+//     const button = document.getElementById('studyModeButton');  // 获取按钮
+//     const gridItems = document.querySelectorAll('.grid-item');  // 获取所有格子
+
+//     if (isStudyModeOn) {
+//         // 激活学习模式
+//         button.textContent = '浏览模式';  // 更新按钮文本
+//         button.style.backgroundColor = '#6c757d';  // 设置为灰色
+//         gridItems.forEach(item => {
+//             if (item.textContent.trim() !== '') {
+//                 item.style.backgroundColor = 'grey';  // 设置背景色为灰色
+//                 item.dataset.originalContent = item.textContent;  // 保存原始内容
+//                 item.textContent = '';  // 隐藏内容
+//             }
+//         });
+//     } else {
+//         // 关闭学习模式
+//         button.textContent = '学习模式';  // 更新按钮文本
+//         button.style.backgroundColor = '#ffc107';  // 设置为黄色
+//         gridItems.forEach(item => {
+//             if (item.dataset.originalContent) {
+//                 item.style.backgroundColor = '';  // 恢复原始背景色
+//                 item.textContent = item.dataset.originalContent;  // 恢复内容
+//                 delete item.dataset.originalContent;  // 删除保存的原始内容
+//             }
+//         });
+//     }
+// }
 
 
 //在主题框中查询数据库中的内容
