@@ -76,8 +76,20 @@ function updateRecordTableView(id, title, grids) {
     populateTableRow(tableBody, newGrid);
 }
 
+//格子的相关操作
+// 处理双击格子事件的函数
+function handleDoubleClick(gridNumber) {
+    if (isStudyModeOn) {
+        // 如果处于学习模式，恢复格子颜色
+        revealGridContent(gridNumber);
+    } else {
+        // 如果不在学习模式下，编辑格子内容
+        editGrid(gridNumber);
+    }
+}
 
-// 用于处理格子内容的函数,简化为:之前的内容
+
+// 用于处理格子内容的函数,简化格子显示的内容为数据库中存储的":"之前的内容
 function processContent(content) {
     // 通过查找“：”和提取之前的内容来简化数据
     const index = content.indexOf('：');
@@ -90,6 +102,7 @@ function processContent(content) {
 
 let currentGridNumber; // 当前右键点击的格子编号
 
+//格子右键点击时的菜单
 function showCustomContextMenu(x, y, gridId) {
     const menu = document.getElementById('custom-context-menu');
     const menuWidth = menu.offsetWidth;
@@ -246,8 +259,6 @@ function saveGrids() {
         console.error('Error checking title:', error);
     });
 }
-
-
 
 
 //读取数据库到九宫格
@@ -578,7 +589,14 @@ function applyStudyMode() {
     button.style.backgroundColor = '#6c757d';
 }
 
-// 3.清除学习模式的设置，恢复正常模式
+//3.恢复单个格子颜色的函数
+function revealGridContent(gridNumber) {
+    const gridElement = document.getElementById(`grid${gridNumber}`);
+    gridElement.style.backgroundColor = ''; // 恢复背景色
+    gridElement.style.color = ''; // 恢复文字颜色
+}
+
+// 4.清除学习模式的设置，恢复正常模式
 function clearStudyMode() {
     const gridItems = document.querySelectorAll('.grid-item');
     gridItems.forEach(item => {
@@ -591,7 +609,9 @@ function clearStudyMode() {
     button.style.backgroundColor = '#ffc107';
 }
 
-// 4.切换学习模式
+
+
+// 5.切换学习模式
 function toggleStudyMode() {
     isStudyModeOn = !isStudyModeOn; // 切换状态
     if (isStudyModeOn) {
@@ -602,39 +622,6 @@ function toggleStudyMode() {
         clearStudyMode();
     }
 }
-
-
-// //2.学习模式状态
-// function toggleStudyMode() {
-//     isStudyModeOn = !isStudyModeOn;  // 切换状态
-
-//     const button = document.getElementById('studyModeButton');  // 获取按钮
-//     const gridItems = document.querySelectorAll('.grid-item');  // 获取所有格子
-
-//     if (isStudyModeOn) {
-//         // 激活学习模式
-//         button.textContent = '浏览模式';  // 更新按钮文本
-//         button.style.backgroundColor = '#6c757d';  // 设置为灰色
-//         gridItems.forEach(item => {
-//             if (item.textContent.trim() !== '') {
-//                 item.style.backgroundColor = 'grey';  // 设置背景色为灰色
-//                 item.dataset.originalContent = item.textContent;  // 保存原始内容
-//                 item.textContent = '';  // 隐藏内容
-//             }
-//         });
-//     } else {
-//         // 关闭学习模式
-//         button.textContent = '学习模式';  // 更新按钮文本
-//         button.style.backgroundColor = '#ffc107';  // 设置为黄色
-//         gridItems.forEach(item => {
-//             if (item.dataset.originalContent) {
-//                 item.style.backgroundColor = '';  // 恢复原始背景色
-//                 item.textContent = item.dataset.originalContent;  // 恢复内容
-//                 delete item.dataset.originalContent;  // 删除保存的原始内容
-//             }
-//         });
-//     }
-// }
 
 
 //在主题框中查询数据库中的内容
