@@ -3,12 +3,13 @@ import zhipuai
 import os
 from flask import jsonify
 import re
-import openai
+from openai import OpenAI
 
 class APIHandler:
     def __init__(self):
         zhipuai.api_key = os.getenv('ZHIPU_APIKEY')   # 设定智谱AI的API密钥
-        openai.api_key = os.getenv("OPENAI_APIKEY")
+        self.client = OpenAI(api_key=os.getenv("OPENAI_APIKEY"),
+        )
 
         # 定义模板字典
         self.templates = {
@@ -94,16 +95,26 @@ class APIHandler:
         prompt_template = self.templates.get(prompt_type) or self.templates['default']
         prompt = prompt_template.format(term=term)
         try:
-            response = openai.ChatCompletion.create(
+            # 创建聊天模型的完成请求
+            response = self.client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+
+                    }
+                ],
                 model="gpt-4-1106-preview",
-                messages=[{"role": "user", "content": prompt.format(term=term)}]
+                top_p=0.7,
+                temperature=0.95,
             )
+
 
             # 处理并返回响应数据
             print(response)  #监测返回值是否准确
             
             # 提取内容
-            content = response.get('choices', [{}])[0].get('message', {}).get('content', '')
+            content = response.choices[0].message.content.strip()
 
             #清理格式
             content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
