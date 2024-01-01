@@ -148,7 +148,7 @@ body {
     padding: 5px 15px;
     min-width: 100px;  /* 或更大，根据需要调整 */
     margin-top: 20px; /* 为按钮添加顶部外边距 */
-    background-color: #28a745;
+    background-color: #ffc107;
     color: white;
     border: none;
     cursor: pointer;
@@ -173,6 +173,8 @@ body {
     background-color: #dc3545; /* 红色 */
 }
 
+
+
 /* 九宫格显示区域 */
 #grid-container {
     display: grid;
@@ -189,8 +191,8 @@ body {
     justify-content: center; /* 水平居中 */
     background-color: #fff; /* 设置格子的背景色 */
     padding: 10px; /* 添加一些内边距 */
-    min-height: 225px; /* 设置最小高度为225px */
-    width: 364px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
+    min-height: 200px; /* 设置最小高度为225px */
+    width: 350px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
     word-wrap: break-word; /* 允许长单词或URL换行到下一行 */
     font-size: 120%; /* 增加字体大小 */
 }
@@ -256,6 +258,10 @@ body {
 /* 当你有固定的表头时，调整表头的右边距以补偿滚动条的宽度 */
 thead th {
     padding-right: 8px; /* 调整为实际滚动条宽度的估计值 */
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 /* 确保表头单元格和表体单元格在有滚动条时能够对齐 */
@@ -264,13 +270,6 @@ th, td {
     min-width: 120px; /* 或其他适当的宽度 */
 }
 
-
-thead th {
-    background-color: #f2f2f2;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
 
 
 tbody {
@@ -337,6 +336,10 @@ tr {
 /* 导出按钮颜色 */
 .export-btn {
     background-color: #28a745;
+}
+
+.modify-btn {
+    background-color: #007bff;
 }
 
 /* 自定义悬停提示样式 */
@@ -451,4 +454,54 @@ tr {
 /* 覆盖原来的loading图标样式 */
 .loading-content img {
     display: none; /* 隐藏静态加载图标 */
+}
+
+
+/* 数据库条目修改的模态窗口 */
+.modal {
+    display: none; /* 默认隐藏模态框 */
+    position: fixed;
+    z-index: 10;  /* 模态框的位置,数值越大越上层 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.modal-content input[type="text"] {
+    margin-left: 20px;
+    width: 80%;  /* 增加输入框的宽度 */
+    padding: 8px; /* 增加一些内边距以便于输入 */
+    margin-bottom: 10px; /* 增加与下一个输入框的距离 */
+    border: 1px solid #ccc; /* 输入框边框样式 */
+}
+
+.modal-content button {
+    margin-top: 20px; /* 或更大的值，根据需要调整 */
+    padding: 10px 15px; /* 可以同时调整按钮的内边距使其看起来更大 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

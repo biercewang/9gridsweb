@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // 用于截断文本并添加省略号的函数
 function truncateText(text) {
     const ellipsis = '...';
-    if (text.length > 20) {
+    if (text.length > 20) { 
         return text.substring(0, 20 - ellipsis.length) + ellipsis;
-    }
+    }  //表格框里显示的文字数量
     return text;
 }
 
@@ -272,6 +272,8 @@ function saveGrids() {
 
 
 //读取数据库到九宫格
+let history = []; //读取过格子的ID号
+
 function promptForIdAndLoadGrid(optionalGridId) {
     let gridId = optionalGridId; // 如果提供了ID，使用它
     if (!gridId) {
@@ -306,6 +308,21 @@ function promptForIdAndLoadGrid(optionalGridId) {
             console.error('Error fetching grid:', error);
             alert('读取失败，请确保输入了正确的ID');
         });
+    }
+    if (optionalGridId) {
+        // 在读取新的条目前，把当前条目ID添加到历史记录中
+        history.push(optionalGridId);
+    }
+}
+
+// 当点击返回按钮时调用此函数
+function goBack() {
+    if (history.length > 1) {  // 确保有可以返回的历史记录
+        history.pop();  // 移除当前查看的记录
+        const lastViewedId = history.pop();  // 获取上一个条目的ID
+        promptForIdAndLoadGrid(lastViewedId);  // 加载上一个条目
+    } else {
+        alert("没有更多的历史记录了！");
     }
 }
 
@@ -695,4 +712,114 @@ function displayQueryResults(results) {
 // 关闭模态框
 document.getElementsByClassName("close")[0].onclick = function() {
     document.getElementById('query-result-modal').style.display = "none";
+}
+
+
+//编辑数据库数据
+// 1打开编辑模态窗口
+function editRecord() {
+    const idToEdit = prompt("请输入要编辑的条目ID:");
+    if (idToEdit) {
+        // 假设 fetchRecordDetails 是一个函数，用于获取指定ID的记录详情
+        fetchRecordDetails(idToEdit).then(data => {
+            // 使用获取到的数据填充输入字段
+            document.getElementById('edit-id').value = data.id;
+            document.getElementById('edit-title').value = data.title;
+            document.getElementById('edit-grid1').value = data.grid1;
+            // ...填充其他格子...
+            // 显示模态窗口
+            document.getElementById('edit-modal').style.display = 'block';
+        });
+    }
+}
+
+// 2关闭编辑模态窗口
+// function closeEditModal() {
+//     document.getElementById('edit-modal').style.display = 'none';
+// }
+function closeModifyModal() {
+    document.getElementById('modify-modal').style.display = 'none';
+}
+
+
+
+// 3保存更改并更新数据库
+function saveEditedRecord() {
+    const id = document.getElementById('edit-id').value;
+    const updatedData = {
+        title: document.getElementById('edit-title').value,
+        grid1: document.getElementById('edit-grid1').value,
+        // ...其他格子的数据...
+    };
+    // 假设 updateRecord 是一个函数，用于发送更新请求到后端
+    updateRecord(id, updatedData).then(response => {
+        alert("更新成功！");
+        closeEditModal();
+        // 可以在这里添加逻辑来更新页面上显示的数据
+    }).catch(error => {
+        alert("更新失败：" + error);
+    });
+}
+
+
+// 4当点击修改条目按钮时调用此函数
+function modifyGrid() {
+    const gridId = prompt("请输入要修改的条目ID:");
+    if (gridId) {
+        fetch(`/api/grids/${gridId}`)
+        .then(response => response.json())
+        .then(grid => {
+            // 用获取到的格子数据填充修改表单
+            fillModifyForm(grid);
+        })
+        .catch(error => {
+            console.error('Error fetching grid for modification:', error);
+            alert('获取数据失败，请确保输入了正确的ID');
+        });
+    }
+}
+
+// 5用格子数据填充修改表单的函数
+function fillModifyForm(grid) {
+    document.getElementById('modify-title').value = grid.title;
+    for (let i = 1; i <= 9; i++) {
+        document.getElementById(`modify-grid${i}`).value = grid[`grid${i}`];
+    }
+    document.getElementById('modify-reference').value = grid.reference;
+    document.getElementById('modify-id').value = grid.id; // 存储要修改的条目的ID
+
+    // 显示修改表单的模态窗口
+    document.getElementById('modify-modal').style.display = 'block';
+}
+
+// 6提交修改的函数
+function submitModification() {
+    const id = document.getElementById('modify-id').value;
+    const title = document.getElementById('modify-title').value.trim();
+    const reference = document.getElementById('modify-reference').value.trim();
+    const grids = [];
+    for (let i = 1; i <= 9; i++) {
+        grids.push(document.getElementById(`modify-grid${i}`).value.trim());
+    }
+
+    fetch(`/api/grids/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, grids, reference })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Modification success:', data);
+        alert('条目已成功修改');
+        // 关闭修改表单的模态窗口
+        document.getElementById('modify-modal').style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Modification error:', error);
+        alert('修改失败');
+    });
+    // 提交成功后关闭模态窗口
+    closeModifyModal();
 }

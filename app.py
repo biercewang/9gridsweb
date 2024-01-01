@@ -201,6 +201,20 @@ def check_title(title):
         return jsonify({'exists': False})
 
 
+#新增的修改数据库的路由
+@app.route('/api/grids/<int:id>', methods=['PUT'])
+def modify_grid(id):
+    grid = SavedGrids.query.get_or_404(id)
+    data = request.json
+    grid.title = data.get('title', grid.title)
+    grid.reference = data.get('reference', grid.reference)
+    for i in range(1, 10):
+        setattr(grid, f'grid{i}', data.get(f'grids')[i - 1])
+    db.session.commit()
+    return jsonify({'message': 'Grid updated successfully', 'id': grid.id})
+
+
+
 # #读取格子
 @app.route('/api/grids/<int:id>', methods=['GET'])
 def get_grid(id):
