@@ -626,7 +626,7 @@ function applyStudyMode() {
     });
     //修改按钮样式
     const button = document.getElementById('studyModeButton'); // 获取按钮
-    button.textContent = '浏览模式';
+    button.textContent = '浏览模式✓';
     button.style.backgroundColor = '#6c757d';
 }
 
@@ -646,7 +646,7 @@ function clearStudyMode() {
     });
 
     const button = document.getElementById('studyModeButton'); // 获取按钮
-    button.textContent = '学习模式';
+    button.textContent = '学习模式✓';
     button.style.backgroundColor = '#ffc107';
 }
 
