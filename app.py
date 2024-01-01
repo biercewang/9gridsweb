@@ -10,6 +10,7 @@ from io import BytesIO
 import markdown
 from api_handler import APIHandler 
 import re
+import random
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -389,6 +390,12 @@ def query_titles(term):
     # 模糊匹配查询
     results = SavedGrids.query.filter(SavedGrids.title.like(f'%{term}%')).all()
     return jsonify(results=[{'id': result.id, 'title': result.title} for result in results])
+
+#随机考考模式路由→读取全部ID
+@app.route('/api/all_grid_ids', methods=['GET'])
+def all_grid_ids():
+    ids = [grid.id for grid in SavedGrids.query.all()]
+    return jsonify(ids)
 
 
 if __name__ == '__main__':

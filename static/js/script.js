@@ -823,3 +823,33 @@ function submitModification() {
     // 提交成功后关闭模态窗口
     closeModifyModal();
 }
+
+//随机考考模式
+function randomStudy() {
+    // 如果当前不是学习模式，则激活学习模式
+    if (!isStudyModeOn) {
+        toggleStudyMode(true);  // 激活学习模式
+    }
+
+    // 向服务器请求所有格子的ID
+    fetch('/api/all_grid_ids')
+    .then(response => response.json())
+    .then(allIds => {
+        // 过滤掉已经读取过的ID
+        const unreadIds = allIds.filter(id => !history.includes(id));
+
+        // 检查是否还有未读的ID
+        if(unreadIds.length > 0) {
+            // 从未读的ID中随机选择一个
+            const randomId = unreadIds[Math.floor(Math.random() * unreadIds.length)];
+            promptForIdAndLoadGrid(randomId);  // 加载这个ID的数据
+            history.push(randomId);  // 添加到历史记录中
+        } else {
+            alert("所有条目都已经读取过。");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('请求出错');
+    });
+}

@@ -328,19 +328,27 @@ tr {
     display: inline-block; /* 确保按钮可以被正确居中 */
 }
 
-/* 删除按钮颜色 */
-.delete-btn {
-    background-color: #dc3545;
-}
 
 /* 导出按钮颜色 */
 .export-btn {
     background-color: #28a745;
 }
 
+/* 修改按钮颜色 */
 .modify-btn {
     background-color: #007bff;
 }
+
+/* 删除按钮颜色 */
+.delete-btn {
+    background-color: #dc3545;
+}
+
+/* 考考按钮颜色 */
+.study-btn {
+    background-color: #ffc107;
+}
+
 
 /* 自定义悬停提示样式 */
 [data-tooltip] {
@@ -504,4 +512,13 @@ tr {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* 随机考考模态窗口样式 */
+#random-study-modal .modal-content {
+    /* 添加所需的样式，例如宽度、边框等 */
+}
+
+#random-study-btn {
+    /* 添加按钮样式，如背景色、边距等 */
 }
