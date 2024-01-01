@@ -325,16 +325,12 @@ def export_record(id):
     md_content = f"# {record.title}\n\n"
 
     # 创建带有空白列的3x3的Markdown表格，并设置内容居中
-    md_content += "|   |↑|↑|↑|     |\n"  # 表头
-    md_content += "|:---:|:---:|:---:|:---:|:---:|\n"  # 分隔行，设置为居中对齐
-
-
+    md_content += "|←|↑|→|\n"  # 表头
+    md_content += "|:---:|:---:|:---:|\n"  # 分隔行，设置为居中对齐
     # 填充表格内容
     for i in range(1, 10, 3):
         grid_contents =  [getattr(record, f'grid{j}', '') for j in range(i, i + 3)]
-        md_content += f"|←| {' | '.join(grid_contents)} |→|\n"
-
-    md_content += "|     |↓|↓|↓|     |\n"
+        md_content += f"| {' | '.join(grid_contents)} |\n"
 
 
     # 添加参考来源
