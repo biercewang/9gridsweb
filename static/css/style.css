@@ -1,5 +1,4 @@
 
-
 /* 主体布局 */
 body {
     font-family: Arial, sans-serif;
@@ -9,14 +8,6 @@ body {
 }
 
 /* 标题输入及参考来源区域 */
-/* 输入区域容器样式 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
 /* 输入区域容器样式 */
 #input-container {
     display: flex; /* 启用Flexbox布局 */
@@ -39,14 +30,14 @@ body {
     flex-shrink: 0; /* 防止缩小 */
 }
 
+
 /* 通用输入框样式 */
 #title-input-area input, #reference-input-area input {
     width: 100%; /* 填满容器 */
     padding: 5px; /* 内边距 */
-    margin: 0 10px; /* 左右外边距 */
+    margin: 0 0px; /* 左右外边距 */
     flex-grow: 0; /* 阻止填充剩余空间 */
-    min-width: 250px; /* 最小宽度 */
-    max-width: 1500px; /* 最大宽度 */
+    min-width: 50px; /* 最小宽度 */
 }
 
 /* 按钮容器样式 */
@@ -64,8 +55,9 @@ body {
     background-color: #007bff; /* 默认背景色 */
     border: none; /* 无边框 */
     cursor: pointer; /* 手型光标 */
-    margin-right: 10px; /* 右侧外边距 */
-    border-radius: 10px; /* 圆角边框，您可以根据需要调整这个值 */
+    margin-left: 10px; /* 左侧外边距 */
+    margin-right: 5px; /* 右侧外边距 */
+    border-radius: 5px; /* 圆角边框，您可以根据需要调整这个值 */
 }
 
 /* 查询数据库按钮颜色 */
@@ -186,7 +178,7 @@ body {
 /* 九宫格显示区域 */
 #grid-container {
     display: grid;
-    grid-template-columns: repeat(3, minmax(364px, auto)); /* 设置每列的最小宽度 */
+    grid-template-columns: repeat(3, minmax(50px, 300px)); /* 设置每列的最小宽度 */
     justify-content: center; /* 水平居中 */
     gap: 10px; /* 格子之间的间隔 */
     margin: auto; /* 自动外边距确保水平居中 */
@@ -200,9 +192,9 @@ body {
     background-color: #fff; /* 设置格子的背景色 */
     padding: 10px; /* 添加一些内边距 */
     min-height: 180px; /* 设置最小高度为225px */
-    width: 350px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
+    max-width: 350px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
     word-wrap: break-word; /* 允许长单词或URL换行到下一行 */
-    font-size: 120%; /* 增加字体大小 */
+    font-size: 110%; /* 增加字体大小 */
 }
 
 
@@ -246,7 +238,6 @@ body {
 }
 
 /* 表格视图 */
-
 #record-table-container {
     width: 100%; /* 根据需要调整宽度 */
     border-collapse: collapse; /* 折叠边框 */
@@ -278,7 +269,6 @@ th, td {
     box-sizing: border-box; /* 包括内边距和边框在内的总宽度 */
     min-width: 120px; /* 或其他适当的宽度 */
 }
-
 
 
 tbody {
