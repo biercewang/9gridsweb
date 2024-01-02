@@ -16,7 +16,8 @@
         <label for="title-input">主题→</label>
         <input type="text" id="title-input" placeholder="请输入主题，如“大五人格”">
         <button class="query-database-button" onclick="queryDatabase()">查询主题✓</button>
-        <button class="ai-query-button" onclick="performAIQuery()">A I 查询↓</button>
+        <button class="ai-query-button" onclick="performAIQuery()">AI分析↓</button>
+        <button class="study-btn" onclick="randomStudy()">随便考考?</button>
     </div>
 
     <!-- 查询结果模态框 -->
@@ -44,7 +45,7 @@
     </div>
     <div class="button-container">
         <button onclick="addWordToGrid()">加入格子↓</button>
-        <button onclick="organizeInputWithAI()">A I 整理↑</button>
+        <button onclick="organizeInputWithAI()">AI 整理↑</button>
         <button onclick="clearInputText()">清除要点✕</button>
         <button id="studyModeButton" onclick="toggleStudyMode()">学习模式✓</button> <!-- Study mode button added here -->
 
@@ -104,7 +105,7 @@
     <button class="export-btn" onclick="promptForIdAndExportRecord()">导出条目↓</button>
     <button class="modify-btn" onclick="modifyGrid()">修改条目✓</button> 
     <button class="delete-btn" onclick="promptForIdAndDeleteRecord()">删除条目✕</button>
-    <button class="study-btn" onclick="randomStudy()">随便考考?</button>
+    <!-- <button class="study-btn" onclick="randomStudy()">随便考考?</button> -->
 
 </div>
 

@@ -41,7 +41,7 @@ body {
 }
 
 #title-input-area button {
-    min-width: 100px;  /* 或更大，根据需要调整 */
+    min-width: 120px;  /* 或更大，根据需要调整 */
     white-space: nowrap;  /* 防止文本换行 */
     padding: 5px 15px;
     color: white;
@@ -56,6 +56,11 @@ body {
 
 #title-input-area .ai-query-button {
     background-color: #007bff; /* 黄色 */
+}
+
+/* 考考按钮颜色 */
+#title-input-area .study-btn {
+    background-color: #ffc107;
 }
 
 
@@ -146,7 +151,7 @@ body {
 #input-area button {
     font-family: 'Noto Sans SC', sans-serif; /* 使用'Noto Sans SC'，如果无法加载则回退到系统默认的无衬线字体 */
     padding: 5px 15px;
-    min-width: 100px;  /* 或更大，根据需要调整 */
+    min-width: 120px;  /* 或更大，根据需要调整 */
     margin-top: 20px; /* 为按钮添加顶部外边距 */
     background-color: #ffc107;
     color: white;
@@ -208,7 +213,7 @@ body {
 
 #action-buttons button {
     padding: 5px 15px;
-    min-width: 100px;  /* 或更大，根据需要调整 */
+    min-width: 120px;  /* 或更大，根据需要调整 */
     margin: 0 10px; /* Horizontal spacing for buttons */
     border: none;
     cursor: pointer;
@@ -321,6 +326,7 @@ tr {
 /* 表格操作按钮公共样式 */
 #record-table-actions button {
     padding: 5px 15px;
+    min-width: 120px;
     margin: 0 10px;      /* 为按钮添加水平间距 */
     color: white;
     border: none;
@@ -345,9 +351,9 @@ tr {
 }
 
 /* 考考按钮颜色 */
-.study-btn {
+/* .study-btn {
     background-color: #ffc107;
-}
+} */
 
 
 /* 自定义悬停提示样式 */
@@ -514,11 +520,3 @@ tr {
     cursor: pointer;
 }
 
-/* 随机考考模态窗口样式 */
-#random-study-modal .modal-content {
-    /* 添加所需的样式，例如宽度、边框等 */
-}
-
-#random-study-btn {
-    /* 添加按钮样式，如背景色、边距等 */
-}
