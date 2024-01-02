@@ -8,59 +8,79 @@ body {
     background-color: #f4f4f4;
 }
 
-/* 标题输入区域 */
+/* 标题输入及参考来源区域 */
+/* 输入区域容器样式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
 /* 输入区域容器样式 */
 #input-container {
     display: flex; /* 启用Flexbox布局 */
-    justify-content: space-between; /* 两个子元素分布在两端 */
+    justify-content: space-between; /* 两端分布 */
     align-items: center; /* 垂直居中对齐 */
-    margin-bottom: 20px; /* 保留原有的底部外边距 */
+    margin-bottom: 20px; /* 底部外边距 */
 }
 
-/* 标题输入区域样式 */
-#title-input-area {
+/* 通用输入区域样式 */
+#title-input-area, #reference-input-area {
     display: flex;
     align-items: center;
-    margin-right: 20px; /* 保持原有的右外边距 */
+    flex: 1; /* 平均分配空间 */
 }
 
-#title-input-area label {
-    white-space: nowrap;  /* 防止文本换行 */
-    margin-right: 10px; /* 保持右侧外边距 */
-    flex-shrink: 0; /* 防止标签在空间不足时缩小 */
+/* 通用标签样式 */
+#title-input-area label, #reference-input-area label {
+    white-space: nowrap; /* 防止换行 */
+    margin-right: 10px; /* 右侧外边距 */
+    flex-shrink: 0; /* 防止缩小 */
 }
 
-#title-input-area input {
-    padding: 5px;
-    margin-left:0px; 
-    margin-right: 10px; /* 调整输入框的右侧外边距 */
-    width: 50%; /* 控制文本框的宽度 */
-    min-width: 250px; 
-    max-width: 1500px; /* 或设置一个最大宽度 */
-    flex-grow: 0; /* 停止输入框填充剩余空间 */
+/* 通用输入框样式 */
+#title-input-area input, #reference-input-area input {
+    width: 100%; /* 填满容器 */
+    padding: 5px; /* 内边距 */
+    margin: 0 10px; /* 左右外边距 */
+    flex-grow: 0; /* 阻止填充剩余空间 */
+    min-width: 250px; /* 最小宽度 */
+    max-width: 1500px; /* 最大宽度 */
 }
 
-#title-input-area button {
-    min-width: 120px;  /* 或更大，根据需要调整 */
-    white-space: nowrap;  /* 防止文本换行 */
-    padding: 5px 15px;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-right: 10px;  /* 在按钮之间添加一些右外边距 */
+/* 按钮容器样式 */
+#button-container {
+    text-align: center; /* 居中 */
+    flex: 1; /* 平均分配空间 */
 }
 
-#title-input-area .query-database-button {
+/* 通用按钮样式 */
+#button-container button {
+    min-width: 120px; /* 最小宽度 */
+    white-space: nowrap; /* 防止换行 */
+    padding: 5px 15px; /* 内边距 */
+    color: white; /* 字体颜色 */
+    background-color: #007bff; /* 默认背景色 */
+    border: none; /* 无边框 */
+    cursor: pointer; /* 手型光标 */
+    margin-right: 10px; /* 右侧外边距 */
+    border-radius: 10px; /* 圆角边框，您可以根据需要调整这个值 */
+}
+
+/* 查询数据库按钮颜色 */
+#button-container .query-database-button {
     background-color: #28a745; /* 绿色 */
 }
 
-#title-input-area .ai-query-button {
-    background-color: #007bff; /* 黄色 */
+/* AI查询按钮颜色 */
+#button-container .ai-query-button {
+    background-color: #007bff; /* 蓝色 */
 }
 
-/* 考考按钮颜色 */
-#title-input-area .study-btn {
-    background-color: #ffc107;
+/* 随便考考按钮颜色 */
+#button-container .study-btn {
+    background-color: #ffc107; /* 黄色 */
 }
 
 
@@ -101,25 +121,7 @@ body {
 
 
 
-/* 参考来源区域样式 */
-#reference-input-area {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    margin-left: 50px; /* 新增左边距来增加空间 */
-}
-
-#reference-input-area label {
-    margin-right: 10px;
-}
-
-#reference-input-area input {
-    padding: 5px;
-    flex-grow: 1;
-}
-
-
-/* 输入和按钮区域 */
+/* 要点输入和按钮区域 */
 #input-area {
     display: flex; /* 启用Flexbox布局 */
     flex-direction: column; /* 使子元素垂直排列 */
@@ -159,6 +161,7 @@ body {
     cursor: pointer;
     margin-right: 20px; /* 在按钮之间添加一些右外边距 */
     font-family: 'Roboto', sans-serif;
+    border-radius: 10px; /* 圆角边框，您可以根据需要调整这个值 */
 
 }
 
@@ -219,6 +222,7 @@ body {
     cursor: pointer;
     display: inline-block; /* Ensure buttons are centered */
     color: whitesmoke; /* Set text color to black for all action buttons */
+    border-radius: 10px; /* 圆角边框，您可以根据需要调整这个值 */
 }
 
 /* Save grids button style */
@@ -332,6 +336,7 @@ tr {
     border: none;
     cursor: pointer;
     display: inline-block; /* 确保按钮可以被正确居中 */
+    border-radius: 10px; /* 圆角边框，您可以根据需要调整这个值 */
 }
 
 
