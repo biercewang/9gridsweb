@@ -5,6 +5,12 @@ body {
     margin: 0;
     padding: 20px;
     background-color: #f4f4f4;
+    background-image: url('images/your-background-image.jpg'); /* 背景图片路径 */
+    background-size: cover; /* 背景图片覆盖整个页面 */
+    background-repeat: no-repeat; /* 背景图片不重复 */
+    background-position: center; /* 背景图片居中显示 */
+    background-attachment: fixed; /* 背景图片固定，内容滚动时背景不动 */
+
 }
 
 /* 标题输入及参考来源区域 */

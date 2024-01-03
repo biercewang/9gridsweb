@@ -393,8 +393,8 @@ def perform_query_sse():
     if term:
         api_handler = APIHandler()  # 创建APIHandler实例
         try:
-            # response = api_handler.fetch_data_zhipu_stream(term, prompt_type)  # 获取流式响应
-            response = api_handler.fetch_data_openai_sse(term, prompt_type)
+            # response = api_handler.fetch_data_zhipu_stream(term, prompt_type)  #获取zhipu的流式响应
+            response = api_handler.fetch_data_openai_sse(term, prompt_type) #获取openai的流式响应
             return Response(response, content_type='text/event-stream')
         except Exception as e:
             return jsonify({'error': str(e)}), 500

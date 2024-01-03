@@ -197,12 +197,15 @@ class APIHandler:
             # 处理流式响应
             for chunk in response:
                 content = chunk.choices[0].delta.content
-                #清理格式
+                content = str(content)
                 content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
                 content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
                 content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    #清除序号
-                print (content)
-                yield content
+                if content == "None":
+                    pass
+                else:
+                    yield content   
+                print(content)
 
         except Exception as e:
             raise e
