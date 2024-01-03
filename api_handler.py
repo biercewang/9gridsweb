@@ -169,4 +169,41 @@ class APIHandler:
             return jsonify({'content': content})
         except Exception as e:
             raise e
+        
+    def fetch_data_openai_sse(self, term, prompt_type='default'):
+        print("Prompt type received:", prompt_type)  # 监测使用的模板
+        prompt_template = self.templates.get(prompt_type) or self.templates['default']
+        prompt = prompt_template.format(term=term)
+        print(prompt)
+
+        try:
+            # 创建聊天模型的完成请求
+            response = self.client.chat.completions.create(
+                model="gpt-4-1106-preview",
+                max_tokens=1000,
+                temperature=0.95,
+                n=1,
+                stop=None,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+
+                    }
+                ],
+                stream=True,
+            )
+
+            # 处理流式响应
+            for chunk in response:
+                content = chunk.choices[0].delta.content
+                #清理格式
+                content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+                content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+                content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)    #清除序号
+                print (content)
+                yield content
+
+        except Exception as e:
+            raise e
 

@@ -537,7 +537,9 @@ function performAIQuery() {
     if (!inputText) {
         alert("请输入查询的术语。");
         return;}
-    perform_query(inputText,promptType)
+    // perform_query(inputText,promptType)
+    //使用流式查询
+    perform_query_sse(inputText,promptType)
 }
 
 function organizeInputWithAI() {
@@ -546,7 +548,10 @@ function organizeInputWithAI() {
     if (!inputText) {
         alert("请输入要整理的要点。");
         return;}
-    perform_query(inputText,promptType)
+
+    // perform_query(inputText,promptType)
+    //使用流式查询
+    perform_query_sse(inputText,promptType)
 }
 
 function perform_query(inputText, promptType){
@@ -582,19 +587,22 @@ function perform_query(inputText, promptType){
 
 
 //执行AI查询(流式查询),搜索主题
-function performAIQuerySSE() {
-    const term = document.getElementById('title-input').value.trim();
-    if (!term) {
-        alert("请输入查询的术语。");
-        return;
-    }
+function perform_query_sse(inputText, promptType) {
+    const requestBody = {
+        term: inputText,
+        prompt_type: promptType
+    };
+
+    const inputTextBox = document.getElementById('input-text'); // 获取输入框元素
+    inputTextBox.value = '';
+    
     showLoadingIndicator();  // 显示加载指示器
     fetch('/api/perform_query_sse', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ term: term })
+        body: JSON.stringify(requestBody)
     })
     .then(response => {
         if (!response.body) {
