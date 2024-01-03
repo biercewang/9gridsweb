@@ -6,7 +6,6 @@
 <title>知识九宫格</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-
 </head>
 <body>
 
@@ -14,21 +13,21 @@
 <div id="input-container">
     <!-- 标题输入区域 -->
     <div id="title-input-area">
-        <label for="title-input">主题→</label>
-        <input type="text" id="title-input" placeholder="请输入主题，如“大五人格”">
+        <label for="title-input"></label>
+        <input type="text" id="title-input" placeholder="可以在这里输入想要学习的主题，比如:波特五力模型">
     </div>
 
     <div id="button-container">
         <!-- 按钮放在这里 -->
-        <button class="query-database-button" onclick="queryDatabase()">查询主题✓</button>
-        <button class="ai-query-button" onclick="performAIQuery()">AI 分析↓</button>
+        <button class="query-database-button" onclick="queryDatabase()">查查主题✓</button>
+        <button class="ai-query-button" onclick="performAIQuery()">帮我想想!</button>
         <button class="study-btn" onclick="randomStudy()">随便考考?</button>
     </div>
 
     <!-- 参考来源区域 -->
     <div id="reference-input-area">
-        <label for="reference-input">来源→</label>
-        <input type="text" id="reference-input" placeholder="请输入参考来源，如“阳志平《聪明的阅读者》P200” ">
+        <label for="reference-input"></label>
+        <input type="text" id="reference-input" placeholder="可以在这里输入参考来源，比如:阳志平《聪明的阅读者》">
     </div>
 
     <!-- 查询结果模态框 -->
@@ -40,21 +39,20 @@
         </div>
     </div>
 
-
 </div>
 
 
 <!-- 输入和按钮区域 -->
 <div id="input-area">
     <div class="input-label-container">
-        <label for="input-text">要点→</label>
-        <textarea id="input-text" rows="5" placeholder="在此输入你的要点，每个要点使用Enter键分行,点击加入格子可分别添加到格子中。"></textarea>
+        <label for="input-text"></label>
+        <textarea id="input-text" rows="4" placeholder="可以在这里输入主题的几个要点，使用回车键分行,点击加入格子可分别添加到格子中"></textarea>
     </div>
     <div class="button-container">
         <button onclick="addWordToGrid()">加入格子↓</button>
-        <button onclick="organizeInputWithAI()">AI 整理↑</button>
+        <button onclick="organizeInputWithAI()">整理一下✓</button>
         <button onclick="clearInputText()">清除要点✕</button>
-        <button id="studyModeButton" onclick="toggleStudyMode()">学习模式✓</button> <!-- Study mode button added here -->
+        <button id="studyModeButton" onclick="toggleStudyMode()">学习模式?</button> <!-- Study mode button added here -->
 
         
     </div>
