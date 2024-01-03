@@ -103,9 +103,37 @@ class APIHandler:
                 top_p=0.7,
                 temperature=0.9,
             )
-            return response  # 返回响应对象供路由处理
+            return self.stream_with_context(response)  # 返回响应对象供路由处理
         except Exception as e:
             raise e  # 抛出异常以供上层处理
+
+    def stream_with_context(self, response):
+        """处理流式数据并按格式输出"""
+        for event in response.events():
+            if event.event == "add":
+                # 清理并发送数据块
+                content = self.clean_content(event.data)
+                print(content)
+                yield content
+            elif event.event in ["error", "interrupted"]:
+                # 发送错误信息并中断
+                yield content
+                break
+            elif event.event == "finish":
+                # 发送最终数据并结束
+                content = self.clean_content(event.data)
+                yield content
+                break
+            else:
+                # 处理其他情况
+                yield content
+
+    def clean_content(self, content):
+        """清理内容的辅助函数"""
+        content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+        content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+        content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)  # 清除序号
+        return content
 
     def fetch_data_openai(self, term, prompt_type='default'):
         print("Prompt type received:", prompt_type)  # 监测使用的模板

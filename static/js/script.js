@@ -530,21 +530,37 @@ function hideLoadingIndicator() {
     document.getElementById('loadingIndicator').style.display = 'none';
 }
 
-
-//执行AI查询,搜索主题
+//合并AI查询,不同按钮选择不同的输入位置和模板
 function performAIQuery() {
-    const term = document.getElementById('title-input').value.trim();
-    if (!term) {
+    const inputText = document.getElementById('title-input').value.trim();
+    const promptType = "default"
+    if (!inputText) {
         alert("请输入查询的术语。");
-        return;
-    }
+        return;}
+    perform_query(inputText,promptType)
+}
+
+function organizeInputWithAI() {
+    const inputText = document.getElementById('input-text').value.trim();
+    const promptType = "organize"
+    if (!inputText) {
+        alert("请输入要整理的要点。");
+        return;}
+    perform_query(inputText,promptType)
+}
+
+function perform_query(inputText, promptType){
+    const requestBody = {
+        term: inputText,
+        prompt_type: promptType
+    };
     showLoadingIndicator();  // 显示加载指示器
     fetch('/api/perform_query', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ term: term })
+        body: JSON.stringify((requestBody))
     })
     .then(response => response.json())
     .then(data => {
@@ -561,7 +577,9 @@ function performAIQuery() {
         console.error('AI查询过程中出错:', error);
         alert('AI查询过程中出错');
     });
+
 }
+
 
 //执行AI查询(流式查询),搜索主题
 function performAIQuerySSE() {
@@ -615,52 +633,6 @@ function performAIQuerySSE() {
 }
 
 
-//执行AI查询,整理要点
-function organizeInputWithAI() {
-    // 从要点文本框中获取文本而不是主题框
-    const inputText = document.getElementById('input-text').value.trim();
-
-    //
-    const promptType = "organize"
-
-
-    if (!inputText) {
-        alert("请输入要整理的要点。");
-        return;
-    }
-    showLoadingIndicator();  // 显示加载指示器
-
-    // 设置请求体包括术语和模板类型
-    const requestBody = {
-        term: inputText,
-        prompt_type: promptType
-    };
-
-
-    fetch('/api/perform_query', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify({ term: inputText })
-        body: JSON.stringify(requestBody) // 修改这里
-    })
-    .then(response => response.json())
-    .then(data => {
-        hideLoadingIndicator();  // 隐藏加载指示器
-        if(data.error) {
-            alert("错误: " + data.error);
-        } else if(data.content) {
-            // 使用返回的内容更新要点文本框
-            document.getElementById('input-text').value = data.content;
-        }
-    })
-    .catch(error => {
-        hideLoadingIndicator();  // 隐藏加载指示器
-        console.error('AI整理过程中出错:', error);
-        alert('AI整理过程中出错');
-    });
-}
 
 //学习模式相关内容
 // 1.标记学习模式是否激活
