@@ -2,7 +2,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask, render_template, request, jsonify, send_file, make_response
+from flask import Flask, render_template, request, jsonify, send_file, make_response, Response
 from config import DevelopmentConfig
 from database import db, init_db
 from models import db, SavedGrids,TemporaryUserInputs
@@ -396,6 +396,53 @@ def query_titles(term):
 def all_grid_ids():
     ids = [grid.id for grid in SavedGrids.query.all()]
     return jsonify(ids)
+
+
+#流式查询路由
+@app.route('/api/perform_query_sse', methods=['POST'])
+def perform_query_sse():
+    data = request.json
+    term = data.get('term', '').strip()
+    prompt_type = data.get('prompt_type', 'default')
+
+    if term:
+        api_handler = APIHandler()  # 创建APIHandler实例
+        try:
+            response = api_handler.fetch_data_zhipu_stream(term, prompt_type)  # 获取流式响应
+            return Response(stream_with_context(response), content_type='text/event-stream')
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': '请输入查询的术语。'}), 400
+
+def stream_with_context(response):
+    """处理流式数据并按格式输出"""
+    for event in response.events():
+        if event.event == "add":
+            # 清理并发送数据块
+            content = clean_content(event.data)
+            yield content
+        elif event.event in ["error", "interrupted"]:
+            # 发送错误信息并中断
+            yield content
+            break
+        elif event.event == "finish":
+            # 发送最终数据并结束
+            content = clean_content(event.data)
+            yield content
+            break
+        else:
+            # 处理其他情况
+            yield content
+
+def clean_content(content):
+    """清理内容的辅助函数"""
+    content = content.strip(' "\'')  # 删除开头和结尾的空白字符及引号
+    content = content.replace('\\n\\n', '\n').replace('\\n', '\n').replace('\xa0 ', '')  # 删除多余的换行和空格
+    content = re.sub(r'\n\d+\.\s+|\n\s+', '\n', content)  # 清除序号
+    return content
+
+
 
 
 if __name__ == '__main__':

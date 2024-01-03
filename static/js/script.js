@@ -563,6 +563,58 @@ function performAIQuery() {
     });
 }
 
+//执行AI查询(流式查询),搜索主题
+function performAIQuerySSE() {
+    const term = document.getElementById('title-input').value.trim();
+    if (!term) {
+        alert("请输入查询的术语。");
+        return;
+    }
+    showLoadingIndicator();  // 显示加载指示器
+    fetch('/api/perform_query_sse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ term: term })
+    })
+    .then(response => {
+        if (!response.body) {
+            throw new Error('ReadableStream not yet supported in this browser.');
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        return new ReadableStream({
+            start(controller) {
+                function push() {
+                    reader.read().then(({ done, value }) => {
+                        if (done) {
+                            controller.close();
+                            hideLoadingIndicator();  // 流结束时隐藏加载指示器
+                            return;
+                        }
+                        // 将流式数据解码并处理
+                        const text = decoder.decode(value, { stream: true });
+                        // 假设您想将每块文本追加到输入框中
+                        document.getElementById('input-text').value += text;
+                        controller.enqueue(value);
+                        push();
+                    });
+                }
+                
+                push();
+            }
+        });
+    })
+    .catch(error => {
+        console.error('AI整理过程中出错:', error);
+        hideLoadingIndicator();  // 隐藏加载指示器
+        alert('AI整理过程中出错');
+    });
+}
+
+
 //执行AI查询,整理要点
 function organizeInputWithAI() {
     // 从要点文本框中获取文本而不是主题框

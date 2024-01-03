@@ -90,6 +90,23 @@ class APIHandler:
         except Exception as e:
             raise e  # 抛出异常以供上层处理
         
+    #智谱的流式查询
+    def fetch_data_zhipu_stream(self, term, prompt_type='default'):
+        print("Prompt type received:", prompt_type)  # 监测使用的模板
+        prompt_template = self.templates.get(prompt_type) or self.templates['default']
+        prompt = prompt_template.format(term=term)
+
+        try:
+            response = zhipuai.model_api.sse_invoke(
+                model="chatglm_turbo",
+                prompt=[{"role": "user", "content": prompt}],
+                top_p=0.7,
+                temperature=0.9,
+            )
+            return response  # 返回响应对象供路由处理
+        except Exception as e:
+            raise e  # 抛出异常以供上层处理
+
     def fetch_data_openai(self, term, prompt_type='default'):
         print("Prompt type received:", prompt_type)  # 监测使用的模板
         prompt_template = self.templates.get(prompt_type) or self.templates['default']
