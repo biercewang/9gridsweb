@@ -91,7 +91,7 @@ class APIHandler:
             raise e  # 抛出异常以供上层处理
         
     #智谱的流式查询
-    def fetch_data_zhipu_stream(self, term, prompt_type='default'):
+    def fetch_data_zhipu_sse(self, term, prompt_type='default'):
         print("Prompt type received:", prompt_type)  # 监测使用的模板
         prompt_template = self.templates.get(prompt_type) or self.templates['default']
         prompt = prompt_template.format(term=term)

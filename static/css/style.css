@@ -391,7 +391,7 @@ tr {
   [data-tooltip]:hover:before {
     opacity: 1;
     visibility: visible;
-    transition-delay: 0.6s; /* 增加延迟时间，如1秒 */
+    transition-delay: 4s; /* 增加延迟时间，如1秒 */
   }
   
   #custom-context-menu {
