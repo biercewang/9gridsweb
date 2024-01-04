@@ -214,7 +214,9 @@ body {
 /* 保存、读取、清除格子按钮 */
 /* Action buttons styling */
 #action-buttons {
-    text-align: center;
+    display: flex; /* 使用Flexbox布局 */
+    flex-wrap: wrap; /* 允许子元素换行 */
+    justify-content: center; /* 居中对齐子元素 */
     margin-top: 20px; /* Increased top margin */
     margin-bottom: 20px; /* Increased top margin */
 }
