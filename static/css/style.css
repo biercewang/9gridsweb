@@ -44,6 +44,9 @@ body {
     margin: 0 0px; /* 左右外边距 */
     flex-grow: 0; /* 阻止填充剩余空间 */
     min-width: 50px; /* 最小宽度 */
+    border-radius: 5px; 
+    border: 1px solid #ccc; /* 更细的边框，颜色为浅灰色 */
+    background-color: rgba(255, 255, 255, 0.7); /* 设置格子的背景色为半透明白色 */
 }
 
 /* 按钮容器样式 */
@@ -140,6 +143,9 @@ body {
 #input-area textarea {
     flex-grow: 1; /* 文本区域填充剩余空间 */
     padding: 5px; /* 保持原有的内边距 */
+    border-radius: 10px; 
+    border: 1px solid #ccc; /* 更细的边框，颜色为浅灰色 */
+    background-color: rgba(255, 255, 255, 0.7); /* 设置格子的背景色为半透明白色 */
 }
 
 .button-container {
@@ -176,7 +182,7 @@ body {
 
 /* 清除要点按钮样式 */
 #input-area button:nth-child(3) {
-    background-color: #dc3545; /* 红色 */
+    background-color: #dc7235; /* 红色 */
 }
 
 
@@ -195,12 +201,13 @@ body {
     display: flex; /* 使用flex布局 */
     align-items: center; /* 垂直居中 */
     justify-content: center; /* 水平居中 */
-    background-color: #fff; /* 设置格子的背景色 */
+    background-color: rgba(255, 255, 255, 0.7); /* 设置格子的背景色为半透明白色 */
     padding: 10px; /* 添加一些内边距 */
     min-height: 180px; /* 设置最小高度为225px */
     max-width: 350px; /* 设置最小宽度为黄金比例宽度 (大约1.61803398875 * 225px) */
     word-wrap: break-word; /* 允许长单词或URL换行到下一行 */
     font-size: 110%; /* 增加字体大小 */
+    border-radius: 10px; 
 }
 
 
@@ -235,7 +242,7 @@ body {
 
 /* Clear grids button style */
 #action-buttons button:nth-child(3) {
-    background-color: #dc3545; /* Red */
+    background-color: #dc7235; /* Red */
 }
 
 /* Study mode button style (newly added) */
@@ -307,14 +314,14 @@ tr {
 }
 
 #record-table th {
-    background-color: #f2f2f2;
+    background-color: rgba(255, 255, 255, 0.7); /* 设置格子的背景色为半透明白色 */
 }
 
-/* 设置表格中的文本居中 */
-#record-table td, #record-table th {
-    text-align: center; /* 水平居中 */
-    vertical-align: middle; /* 垂直居中 */
+#record-table td {
+    background-color: rgba(255, 255, 255, 0.5); /* 设置格子的背景色为半透明白色 */
 }
+
+
 
 
 /* 操作按钮样式 */
@@ -348,7 +355,7 @@ tr {
 
 /* 删除按钮颜色 */
 .delete-btn {
-    background-color: #dc3545;
+    background-color: #dc7235;
 }
 
 /* 考考按钮颜色 */

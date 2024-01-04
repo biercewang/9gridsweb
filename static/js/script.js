@@ -733,7 +733,10 @@ function displayQueryResults(results) {
     results.forEach(result => {
         const li = document.createElement('li');
         li.textContent = result.title;
-        li.onclick = function() { promptForIdAndLoadGrid(result.id); }; // 点击时调用读取逻辑
+        li.onclick = function() { // 点击时调用读取逻辑
+            promptForIdAndLoadGrid(result.id); 
+            document.getElementById('query-result-modal').style.display = 'none'; // 关闭模态框
+        }; 
         resultList.appendChild(li);
     });
 
